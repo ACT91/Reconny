@@ -16,8 +16,8 @@ async def lifespan(app: FastAPI):
     # Shutdown: cleanup if needed
 
 app = FastAPI(
-    title="ReconGPT",
-    description="AI-Powered Distributed Reconnaissance Automation Platform",
+    title="Reconny",
+    description="AI-Powered Attack Surface Management Platform",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -37,7 +37,7 @@ app.include_router(results.router, prefix=f"{settings.API_V1_PREFIX}/results", t
 
 @app.get("/")
 async def root():
-    return {"message": "ReconGPT API", "version": "1.0.0", "docs": "/docs"}
+    return {"message": "Reconny API", "version": "1.0.0", "docs": "/docs"}
 
 @app.get("/health")
 async def health():

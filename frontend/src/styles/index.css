@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-[#F8F5F0] via-[#FDFBFA] to-[#FAF0D9] bg-fixed min-h-screen text-brand-text antialiased;
+  }
+  
+  * {
+    @apply selection:bg-brand-yellow selection:text-brand-dark;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white rounded-4xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300;
+  }
+  
+  .card-dark {
+    @apply bg-brand-dark text-white rounded-4xl p-8 shadow-xl;
+  }
+  
+  .btn-primary {
+    @apply px-6 py-3 rounded-full bg-brand-dark text-white font-medium hover:bg-brand-dark/90 transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply px-6 py-3 rounded-full bg-brand-yellow text-brand-dark font-medium hover:bg-brand-yellow/90 transition-colors;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white focus:border-brand-dark focus:ring-2 focus:ring-brand-yellow/20 outline-none transition-all;
+  }
+  
+  .badge {
+    @apply px-3 py-1 rounded-full text-xs font-semibold;
+  }
+  
+  .badge-active {
+    @apply badge bg-brand-yellow text-brand-dark;
+  }
+  
+  .badge-inactive {
+    @apply badge bg-gray-100 text-gray-600;
+  }
+  
+  .nav-link {
+    @apply px-6 py-2.5 rounded-full text-sm font-medium transition-colors;
+  }
+  
+  .nav-link-active {
+    @apply nav-link bg-brand-dark text-white;
+  }
+  
+  .nav-link-inactive {
+    @apply nav-link text-brand-muted hover:text-brand-text;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/60 backdrop-blur-md border border-white/40;
+  }
+  
+  .text-balance {
+    text-wrap: balance;
+  }
+}

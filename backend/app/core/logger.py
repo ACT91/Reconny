@@ -16,4 +16,4 @@ def setup_logging():
         ]
     )
 
-logger = logging.getLogger("recongpt")
+logger = logging.getLogger("reconny")

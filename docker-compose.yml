@@ -3,33 +3,33 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15
-    container_name: recongpt-postgres
+    container_name: reconny-postgres
     environment:
-      POSTGRES_USER: recongpt
-      POSTGRES_PASSWORD: recongpt123
-      POSTGRES_DB: recongpt
+      POSTGRES_USER: reconny
+      POSTGRES_PASSWORD: reconny123
+      POSTGRES_DB: reconny
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - recongpt
+      - reconny
 
   redis:
     image: redis:7-alpine
-    container_name: recongpt-redis
+    container_name: reconny-redis
     ports:
       - "6379:6379"
     networks:
-      - recongpt
+      - reconny
 
   backend:
     build: ./backend
-    container_name: recongpt-backend
+    container_name: reconny-backend
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://recongpt:recongpt123@postgres:5432/recongpt
+      DATABASE_URL: postgresql://reconny:reconny123@postgres:5432/reconny
       REDIS_URL: redis://redis:6379/0
       CELERY_BROKER_URL: redis://redis:6379/1
       CELERY_RESULT_BACKEND: redis://redis:6379/2
@@ -40,14 +40,14 @@ services:
       - ./storage:/app/storage
       - ./logs:/app/logs
     networks:
-      - recongpt
+      - reconny
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
 
   worker:
     build: ./backend
-    container_name: recongpt-worker
+    container_name: reconny-worker
     environment:
-      DATABASE_URL: postgresql://recongpt:recongpt123@postgres:5432/recongpt
+      DATABASE_URL: postgresql://reconny:reconny123@postgres:5432/reconny
       REDIS_URL: redis://redis:6379/0
       CELERY_BROKER_URL: redis://redis:6379/1
       CELERY_RESULT_BACKEND: redis://redis:6379/2
@@ -58,11 +58,24 @@ services:
       - ./storage:/app/storage
       - ./logs:/app/logs
     networks:
-      - recongpt
+      - reconny
     command: celery -A app.tasks.celery_app worker --loglevel=info
 
+  frontend:
+    build: ./frontend
+    container_name: reconny-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - reconny
+    command: npm run dev -- --host
+
 networks:
-  recongpt:
+  reconny:
     driver: bridge
 
 volumes:

@@ -1,16 +1,16 @@
-# ReconGPT
+# Reconny
 
-> **AI-Powered Distributed Reconnaissance Automation Platform**
+> **AI-Powered Attack Surface Management Platform**
 
-ReconGPT is a production-grade, scalable reconnaissance automation system that replicates and enhances the manual bug bounty workflow using a modular pipeline architecture with AI-driven analysis.
+Reconny is a production-grade, scalable reconnaissance automation system that replicates and enhances the manual bug bounty workflow using a modular pipeline architecture with AI-driven analysis.
 
-## What is ReconGPT?
+## What is Reconny?
 
-ReconGPT transforms the traditional recon workflow into an automated, intelligent pipeline:
+Reconny transforms the traditional recon workflow into an automated, intelligent pipeline:
 
 **Traditional Manual Recon** → Run tools → Parse output → Analyze → Find bugs
 
-**ReconGPT** → Job-based pipeline → Distributed workers → AI analysis → Prioritized results
+**Reconny** → Job-based pipeline → Distributed workers → AI analysis → Attack surface graph
 
 ## Features
 
@@ -18,8 +18,9 @@ ReconGPT transforms the traditional recon workflow into an automated, intelligen
 - **Job-Based Architecture**: Queue-driven, stateful, resumable scans
 - **Horizontal Scaling**: Add workers on-demand for massive scans
 - **AI Analysis Layer**: GPT-powered attack surface prioritization
+- **Attack Surface Graph**: Visual navigation of domain → subdomains → endpoints → vulnerabilities
 - **RESTful API**: Full programmatic control
-- **Web Dashboard**: Real-time scan monitoring (React + TypeScript)
+- **Modern Dashboard**: React + TypeScript with real-time updates
 - **Multi-Project Support**: Organize scans by bug bounty programs
 
 ## Architecture
@@ -57,8 +58,8 @@ User → API → Job Queue → Workers → Pipeline Stages → AI Analysis → R
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/ReconGPT.git
-cd ReconGPT
+git clone https://github.com/yourusername/Reconny.git
+cd Reconny
 
 # Copy environment template
 cp .env.example .env
@@ -96,7 +97,7 @@ curl -X POST http://localhost:8000/api/v1/scan/start \
 ## Project Structure
 
 ```
-ReconGPT/
+Reconny/
 ├── backend/          # FastAPI backend
 │   ├── app/
 │   │   ├── api/      # REST endpoints
@@ -105,7 +106,13 @@ ReconGPT/
 │   │   ├── ai/       # AI analysis engine
 │   │   ├── models/   # Database models
 │   │   └── integrations/ # Tool wrappers
-├── frontend/         # React dashboard
+├── frontend/         # React + TypeScript dashboard
+│   ├── src/
+│   │   ├── features/ # Feature modules
+│   │   ├── components/ # UI components
+│   │   ├── pages/    # Page components
+│   │   ├── graphs/   # Attack surface visualization
+│   │   └── charts/   # Analytics charts
 ├── storage/          # Scan results & artifacts
 ├── infrastructure/   # Docker, K8s configs
 └── docs/            # Architecture & API docs
@@ -117,7 +124,7 @@ Key environment variables:
 
 ```bash
 # Database
-DATABASE_URL=postgresql://user:pass@localhost/recongpt
+DATABASE_URL=postgresql://user:pass@localhost/reconny
 
 # Redis Queue
 REDIS_URL=redis://localhost:6379/0
@@ -179,7 +186,7 @@ MIT License - See [LICENSE](LICENSE) for details
 
 ## Disclaimer
 
-ReconGPT is designed for authorized security testing only. Users are responsible for ensuring they have permission to scan target domains. Unauthorized scanning may be illegal.
+Reconny is designed for authorized security testing only. Users are responsible for ensuring they have permission to scan target domains. Unauthorized scanning may be illegal.
 
 ## Acknowledgments
 
@@ -187,13 +194,14 @@ Built with:
 - [ProjectDiscovery](https://projectdiscovery.io/) tools (subfinder, httpx, katana, nuclei)
 - FastAPI, Celery, PostgreSQL, Redis
 - OpenAI GPT models
+- React, TypeScript, TailwindCSS
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/ReconGPT/issues)
+- **Issues**: [GitHub Issues](https://github.com/yourusername/Reconny/issues)
 - **Docs**: [Documentation](docs/)
-- **Security**: Report vulnerabilities privately to security@recongpt.io
+- **Security**: Report vulnerabilities privately to security@reconny.io
 
 ---
 
-**Star this repo if ReconGPT helps your security research!**
+**Star this repo if Reconny helps your security research!**
