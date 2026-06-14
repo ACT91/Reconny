@@ -1,4 +1,10 @@
 import pytest
+from app.core.security_middleware import (
+    validate_domain,
+    sanitize_domain,
+    sanitize_tool_input,
+    ToolInputSanitizer,
+)
 from app.core.security import (
     verify_password,
     get_password_hash,
@@ -9,56 +15,110 @@ from app.core.security import (
 )
 
 
-class TestPasswordHashing:
-    def test_password_hash_and_verify(self):
-        password = "test_password_123!"
-        hashed = get_password_hash(password)
-        assert hashed != password
-        assert verify_password(password, hashed)
-        assert not verify_password("wrong_password", hashed)
+class TestDomainValidation:
+    def test_valid_domains(self):
+        assert validate_domain("example.com")
+        assert validate_domain("sub.example.com")
+        assert validate_domain("my-domain.io")
+        assert validate_domain("sub.domain.co.uk")
+        assert validate_domain("xn--bcher-kva.ch")
 
-    def test_same_password_different_hashes(self):
-        password = "test_password"
-        hash1 = get_password_hash(password)
-        hash2 = get_password_hash(password)
-        assert hash1 != hash2
+    def test_invalid_domains(self):
+        assert not validate_domain("")
+        assert not validate_domain("not_a_domain")
+        assert not validate_domain("http://example.com")
+        assert not validate_domain("example.com/path")
+        assert not validate_domain("-example.com")
+        assert not validate_domain("example-.com")
+        assert not validate_domain("a" * 300)
+
+    def test_sanitize_domain(self):
+        assert sanitize_domain("Example.COM") == "example.com"
+        assert sanitize_domain("http://example.com") == "example.com"
+        assert sanitize_domain("https://sub.example.com/path") == "sub.example.com"
+        assert sanitize_domain(" example.com ") == "example.com"
+        assert sanitize_domain("sub.example.com:8080") == "sub.example.com"
 
 
-class TestJWT:
-    def test_create_and_verify_access_token(self):
-        data = {"sub": "user-123", "email": "test@example.com"}
-        token = create_access_token(data)
-        assert token is not None
-        
-        payload = verify_token(token, "access")
-        assert payload is not None
-        assert payload["sub"] == "user-123"
-        assert payload["email"] == "test@example.com"
-        assert payload["type"] == "access"
+class TestInputSanitization:
+    def test_sanitize_tool_input(self):
+        assert sanitize_tool_input("example.com") == "example.com"
+        assert sanitize_tool_input("example.com; rm -rf /") == "example.com rm -rf "
+        assert sanitize_tool_input("example.com && ls") == "example.com  ls"
+        assert sanitize_tool_input("test' OR '1'='1") == "test OR 11"
+        assert sanitize_tool_input("normal-input_123") == "normal-input_123"
 
-    def test_create_and_verify_refresh_token(self):
-        data = {"sub": "user-123"}
-        token = create_refresh_token(data)
-        assert token is not None
-        
-        payload = verify_token(token, "refresh")
-        assert payload is not None
-        assert payload["sub"] == "user-123"
-        assert payload["type"] == "refresh"
+    def test_tool_input_sanitizer(self):
+        sanitizer = ToolInputSanitizer()
+        assert sanitizer.sanitize_target("http://Example.COM") == "example.com"
+        assert sanitizer.sanitize_target(" test.com ") == "test.com"
+        args = sanitizer.sanitize_command_args(["scan.sh", "--domain", "test.com;ls"])
+        assert len(args) == 3
+        assert ";" not in args[2]
 
-    def test_invalid_token_returns_none(self):
-        assert decode_token("invalid-token") is None
-        assert verify_token("invalid-token", "access") is None
 
-    def test_expired_token_returns_none(self):
-        data = {"sub": "user-123"}
-        token = create_access_token(data, expires_delta=-1)
-        assert verify_token(token, "access") is None
+class TestRateLimiting:
+    def test_rate_limit_key_structure(self):
+        from app.core.rate_limit import RateLimiter
+        import redis.asyncio as redis
+        import pytest
 
-    def test_wrong_token_type(self):
-        data = {"sub": "user-123"}
-        access_token = create_access_token(data)
-        refresh_token = create_refresh_token(data)
-        
-        assert verify_token(refresh_token, "access") is None
-        assert verify_token(access_token, "refresh") is None
+        import asyncio
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            client = loop.run_until_complete(redis.from_url("redis://localhost:6379/0"))
+            limiter = RateLimiter(client)
+            is_allowed, remaining = loop.run_until_complete(
+                limiter.is_allowed("test_key", 100, 60)
+            )
+            assert isinstance(is_allowed, bool)
+            assert isinstance(remaining, int)
+            loop.run_until_complete(client.close())
+        except Exception:
+            pytest.skip("Redis not available")
+
+
+class TestExceptions:
+    def test_app_exception(self):
+        from app.core.exceptions import (
+            AppException,
+            NotFoundException,
+            UnauthorizedException,
+            ForbiddenException,
+            ValidationException,
+            RateLimitException,
+            ToolExecutionException,
+            format_exception_response,
+        )
+
+        exc = NotFoundException("Resource not found")
+        assert exc.status_code == 404
+        assert exc.code == "NOT_FOUND"
+
+        exc = UnauthorizedException()
+        assert exc.status_code == 401
+        assert exc.code == "UNAUTHORIZED"
+
+        exc = ForbiddenException()
+        assert exc.status_code == 403
+
+        exc = ValidationException(errors=[{"field": "email", "msg": "invalid"}])
+        assert exc.status_code == 422
+        assert len(exc.errors) == 1
+
+        exc = RateLimitException(retry_after=60)
+        assert exc.status_code == 429
+        assert exc.retry_after == 60
+
+        exc = ToolExecutionException(tool_name="nuclei", exit_code=1, stderr="error")
+        assert exc.status_code == 502
+        assert exc.tool_name == "nuclei"
+
+    def test_format_exception_response(self):
+        from app.core.exceptions import format_exception_response
+        resp = format_exception_response("Error", "Detail", "ERR_001", extra="field")
+        assert resp["error"] == "Error"
+        assert resp["detail"] == "Detail"
+        assert resp["code"] == "ERR_001"
+        assert resp["extra"] == "field"

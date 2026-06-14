@@ -1,10 +1,11 @@
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse, Response
 from fastapi.exceptions import RequestValidationError
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.exc import SQLAlchemyError
 import structlog
 
@@ -14,6 +15,12 @@ from app.core.database import engine, Base
 from app.api.routes import auth, scans, projects, results, insights
 from app.schemas.common import HealthCheckResponse
 from app.core.logger import get_logger
+from app.core.exceptions import (
+    AppException,
+    ValidationException,
+    format_exception_response,
+)
+from app.core.security_middleware import SecurityHeadersMiddleware
 
 
 setup_logging()
@@ -29,6 +36,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     
     from app.tasks.celery_app import celery_app
     logger.info("celery_connected", broker=settings.CELERY_BROKER_URL)
+    
+    from app.core.websocket_manager import manager
+    await manager.connect_redis()
     
     yield
     
@@ -69,6 +79,8 @@ app.add_middleware(
     allowed_hosts=settings.TRUSTED_HOSTS,
 )
 
+app.add_middleware(SecurityHeadersMiddleware)
+
 
 # Request ID and logging middleware
 @app.middleware("http")
@@ -103,10 +115,40 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     logger.warning("validation_error", errors=exc.errors())
     return JSONResponse(
         status_code=422,
-        content={
-            "detail": "Validation error",
-            "errors": exc.errors(),
-        },
+        content=format_exception_response(
+            error="Validation error",
+            detail=str(exc),
+            code="VALIDATION_ERROR",
+            errors=exc.errors(),
+        ),
+    )
+
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    logger.warning("http_error", status_code=exc.status_code, detail=exc.detail)
+    return JSONResponse(
+        status_code=exc.status_code,
+        content=format_exception_response(
+            error="HTTP error",
+            detail=exc.detail,
+            code=f"HTTP_{exc.status_code}",
+            headers=exc.headers,
+        ),
+        headers=exc.headers or {},
+    )
+
+
+@app.exception_handler(AppException)
+async def app_exception_handler(request: Request, exc: AppException):
+    logger.error("app_error", code=exc.code, detail=exc.detail)
+    return JSONResponse(
+        status_code=exc.status_code,
+        content=format_exception_response(
+            error=exc.message,
+            detail=exc.detail,
+            code=exc.code,
+        ),
     )
 
 
@@ -115,7 +157,11 @@ async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError):
     logger.error("database_error", error=str(exc))
     return JSONResponse(
         status_code=500,
-        content={"detail": "Database error occurred"},
+        content=format_exception_response(
+            error="Database error",
+            detail="A database error occurred. Please try again later.",
+            code="DATABASE_ERROR",
+        ),
     )
 
 
@@ -124,7 +170,11 @@ async def general_exception_handler(request: Request, exc: Exception):
     logger.error("unhandled_error", error=str(exc))
     return JSONResponse(
         status_code=500,
-        content={"detail": "Internal server error"},
+        content=format_exception_response(
+            error="Internal server error",
+            detail="An unexpected error occurred.",
+            code="INTERNAL_ERROR",
+        ),
     )
 
 

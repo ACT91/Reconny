@@ -3,16 +3,17 @@ from uuid import UUID
 from fastapi import Depends, HTTPException, status, Header, Request
 from fastapi.security import OAuth2PasswordBearer, APIKeyHeader
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.config import settings
 from app.core.database import get_db
 from app.core.security import verify_token
 from app.models.user import User, UserRole
 from app.services.auth import AuthService
 from app.core.logger import get_logger
-
+from app.core.rate_limit import check_rate_limit, check_concurrent_scans
 
 logger = get_logger(__name__)
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"/api/v1/auth/login", auto_error=False)
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_PREFIX}/auth/login", auto_error=False)
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 
@@ -109,7 +110,7 @@ async def get_current_analyst_user(
 
 
 class RateLimitDep:
-    def __init__(self, max_requests: int = 100, window_seconds: int = 60):
+    def __init__(self, max_requests: Optional[int] = None, window_seconds: Optional[int] = None):
         self.max_requests = max_requests
         self.window_seconds = window_seconds
     
@@ -118,29 +119,32 @@ class RateLimitDep:
         request: Request,
         current_user: User = Depends(get_current_user),
     ):
-        from app.core.config import settings
-        import redis.asyncio as redis
-        import time
+        is_allowed, remaining = await check_rate_limit(
+            user_id=str(current_user.id),
+            action=request.url.path,
+            max_requests=self.max_requests,
+            window_seconds=self.window_seconds,
+        )
         
-        redis_client = redis.from_url(str(settings.REDIS_URL))
-        
-        key = f"ratelimit:{current_user.id}:{request.url.path}"
-        current = await redis_client.get(key)
-        
-        if current and int(current) >= self.max_requests:
-            await redis_client.close()
+        if not is_allowed:
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 detail=f"Rate limit exceeded. Max {self.max_requests} requests per {self.window_seconds}s"
             )
-        
-        pipe = redis_client.pipeline()
-        pipe.incr(key)
-        if not current:
-            pipe.expire(key, self.window_seconds)
-        await pipe.execute()
-        await redis_client.close()
 
 
 rate_limit = RateLimitDep()
 rate_limit_scan = RateLimitDep(max_requests=10, window_seconds=3600)
+
+
+async def check_scan_concurrency(
+    request: Request,
+    current_user: User = Depends(get_current_user),
+):
+    is_allowed, remaining = await check_concurrent_scans(str(current_user.id))
+    if not is_allowed:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"Maximum concurrent scans exceeded. Max {settings.MAX_CONCURRENT_SCANS_PER_USER} concurrent scans per user"
+        )
+    return remaining

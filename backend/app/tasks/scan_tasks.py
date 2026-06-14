@@ -1,6 +1,7 @@
 from pathlib import Path
 import asyncio
 from datetime import datetime, timezone
+from uuid import UUID
 from celery import chain, chord, group
 from sqlalchemy import select
 
@@ -31,6 +32,7 @@ from app.pipeline.stages import (
 )
 from app.services.scan import ScanService
 from app.core.logger import get_logger
+from app.core.websocket_manager import broadcast_pipeline_event, emit_stage_progress, emit_stage_log
 from app.ai.service import save_insights_to_db
 
 

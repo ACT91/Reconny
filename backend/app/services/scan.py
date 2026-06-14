@@ -18,8 +18,10 @@ from app.schemas.scan import (
     ScanLogsResponse,
     ScanLogEntry,
 )
-from app.schemas.common import PaginationParams
+from app.schemas.common import PaginationParams, parse_sort_param
 from app.core.logger import get_logger
+from app.core.security_middleware import validate_domain, sanitize_domain
+from app.core.exceptions import DomainValidationException, StorageException
 
 
 logger = get_logger(__name__)
@@ -36,10 +38,20 @@ class ScanService:
         project_id: Optional[UUID] = None,
         scan_config: Optional[Dict[str, Any]] = None,
     ) -> ScanJob:
+        sanitized_domain = sanitize_domain(target_domain)
+        if not validate_domain(sanitized_domain):
+            raise DomainValidationException(
+                message="Domain not allowed",
+                detail=f"Domain '{target_domain}' is not in the allowed list or is invalid",
+                domain=target_domain,
+            )
+        
+        target_domain = sanitized_domain
+        
         job = ScanJob(
             owner_id=user_id,
             project_id=project_id,
-            target_domain=target_domain.lower().strip(),
+            target_domain=target_domain,
             status=ScanStatus.QUEUED,
             scan_config=scan_config or {},
             scan_metadata={},
@@ -78,12 +90,21 @@ class ScanService:
             query = query.where(ScanJob.project_id == project_id)
         if status:
             query = query.where(ScanJob.status == status)
+        if pagination and pagination.search:
+            search_term = f"%{pagination.search.lower()}%"
+            query = query.where(ScanJob.target_domain.ilike(search_term))
         
         count_query = select(func.count()).select_from(query.subquery())
         total_result = await self.db.execute(count_query)
         total = total_result.scalar() or 0
         
-        query = query.order_by(desc(ScanJob.created_at))
+        if pagination and pagination.sort:
+            field, direction = parse_sort_param(pagination.sort, "created_at", "desc")
+            sort_field = getattr(ScanJob, field, ScanJob.created_at)
+            order_fn = asc if direction == "asc" else desc
+            query = query.order_by(order_fn(sort_field))
+        else:
+            query = query.order_by(desc(ScanJob.created_at))
         
         if pagination:
             query = query.offset((pagination.page - 1) * pagination.page_size).limit(pagination.page_size)
@@ -378,3 +399,25 @@ class ScanService:
         await self.db.refresh(new_job)
         
         return new_job
+
+    async def get_job_storage_size(self, job_id: UUID) -> int:
+        from pathlib import Path
+        storage_path = Path(settings.STORAGE_PATH) / str(job_id)
+        if not storage_path.exists():
+            return 0
+        total = 0
+        for f in storage_path.rglob("*"):
+            if f.is_file():
+                total += f.stat().st_size
+        return total
+
+    async def enforce_job_storage_limit(self, job_id: UUID) -> bool:
+        size_bytes = await self.get_job_storage_size(job_id)
+        max_bytes = settings.MAX_STORAGE_PER_JOB_GB * 1024 * 1024 * 1024
+        if size_bytes > max_bytes:
+            from app.core.exceptions import StorageException
+            raise StorageException(
+                message="Storage limit exceeded",
+                detail=f"Job storage of {size_bytes / (1024**3):.2f} GB exceeds limit of {settings.MAX_STORAGE_PER_JOB_GB} GB",
+            )
+        return True

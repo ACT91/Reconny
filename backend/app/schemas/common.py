@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar, Optional, List, Any
+from typing import Generic, TypeVar, Optional, List, Any, Dict
 from pydantic import BaseModel, Field, ConfigDict
 from datetime import datetime
 from uuid import UUID
@@ -20,6 +20,8 @@ T = TypeVar("T")
 class PaginationParams(BaseSchema):
     page: int = Field(default=1, ge=1, description="Page number")
     page_size: int = Field(default=20, ge=1, le=100, description="Items per page")
+    sort: Optional[str] = Field(default=None, description="Sort field and direction, e.g. 'created_at:desc' or 'name:asc'")
+    search: Optional[str] = Field(default=None, description="Search term for filtering")
 
 
 class PaginatedResponse(BaseSchema, Generic[T]):
@@ -59,3 +61,12 @@ class TimestampMixin(BaseSchema):
 
 class IDMixin(BaseSchema):
     id: UUID
+
+
+def parse_sort_param(sort: Optional[str], default_field: str = "created_at", default_dir: str = "desc") -> tuple[str, str]:
+    if not sort:
+        return default_field, default_dir
+    parts = sort.split(":")
+    field = parts[0] if len(parts) > 0 else default_field
+    direction = parts[1].lower() if len(parts) > 1 and parts[1].lower() in ("asc", "desc") else default_dir
+    return field, direction

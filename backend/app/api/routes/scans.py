@@ -1,5 +1,5 @@
 from typing import Optional, List
-from fastapi import APIRouter, Depends, HTTPException, status, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, status, Query, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, desc, asc
@@ -30,10 +30,11 @@ from app.schemas.scan import (
     ScanStageProgress,
 )
 from app.schemas.common import PaginationParams
-from app.api.deps import get_current_user, get_current_active_user, rate_limit_scan, rate_limit
+from app.api.deps import get_current_user, get_current_active_user, rate_limit_scan, rate_limit, check_scan_concurrency
 from app.tasks.scan_tasks import execute_full_pipeline
 from app.services.scan import ScanService
 from app.core.logger import get_logger
+from app.core.websocket_manager import manager
 
 
 logger = get_logger(__name__)
@@ -46,26 +47,27 @@ async def start_scan(
     request: ScanRequest,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db),
+    _scan_concurrency: None = Depends(check_scan_concurrency),
     _rate_limit: None = Depends(rate_limit_scan),
 ):
     scan_service = ScanService(db)
-    
+
     job = await scan_service.create_scan_job(
         user_id=current_user.id,
         target_domain=request.target_domain,
         project_id=request.project_id,
         scan_config=request.scan_config or {},
     )
-    
+
     execute_full_pipeline.delay(str(job.id))
-    
+
     logger.info(
         "scan_started",
         user_id=str(current_user.id),
         job_id=str(job.id),
         target=request.target_domain,
     )
-    
+
     return ScanResponse(
         job_id=job.id,
         status=job.status,
@@ -197,6 +199,28 @@ async def stream_scan_logs(
             "X-Accel-Buffering": "no",
         },
     )
+
+
+@router.websocket("/{job_id}/ws")
+async def scan_websocket(
+    ws: WebSocket,
+    job_id: UUID,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_db),
+):
+    scan_service = ScanService(db)
+    job = await scan_service.get_scan_job(job_id, current_user.id)
+
+    if not job:
+        await ws.close(code=1008)
+        return
+
+    await manager.connect_job(ws, job_id)
+    try:
+        while True:
+            await ws.receive_text()
+    except WebSocketDisconnect:
+        await manager.disconnect_job(ws, job_id)
 
 
 @router.get("/{job_id}/results", response_model=dict)
