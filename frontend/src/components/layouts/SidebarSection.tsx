@@ -11,7 +11,7 @@ export function SidebarSection({ title, isCollapsed, children }: SidebarSectionP
     <div className="mb-4">
       {!isCollapsed && (
         <div className="px-6 py-3">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-zinc-500">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-neutral-500">
             {title}
           </span>
         </div>

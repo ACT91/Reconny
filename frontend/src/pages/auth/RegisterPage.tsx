@@ -39,14 +39,14 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="dark min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 relative overflow-hidden">
+    <div className="dark min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-yellow-500/10 via-transparent to-transparent pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-zinc-800/20 via-transparent to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-neutral-800/20 via-transparent to-transparent pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10">
         <div className="flex flex-col items-center gap-3 mb-8">
           <div className="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center shadow-lg shadow-yellow-400/20">
-            <span className="text-zinc-900 font-bold text-lg">R</span>
+            <span className="text-neutral-900 font-bold text-lg">R</span>
           </div>
           <span className="font-semibold text-2xl tracking-tight text-foreground">Reconny</span>
         </div>

@@ -21,45 +21,45 @@ function ProfileSection() {
   const user = useAuthStore((s) => s.user)
 
   return (
-    <Card className="bg-zinc-900/50 border-zinc-800">
+    <Card className="bg-neutral-900/50 border-neutral-800">
       <CardHeader>
-        <CardTitle className="text-zinc-100">Profile</CardTitle>
-        <CardDescription className="text-zinc-400">Your account information</CardDescription>
+        <CardTitle className="text-neutral-100">Profile</CardTitle>
+        <CardDescription className="text-neutral-400">Your account information</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <label className="text-sm text-zinc-400">Full Name</label>
+            <label className="text-sm text-neutral-400">Full Name</label>
             <Input
               value={user?.full_name || ''}
               readOnly
-              className="bg-zinc-800/50 border-zinc-700 text-zinc-300"
+              className="bg-neutral-800/50 border-neutral-700 text-neutral-300"
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm text-zinc-400">Email</label>
+            <label className="text-sm text-neutral-400">Email</label>
             <Input
               value={user?.email || ''}
               readOnly
-              className="bg-zinc-800/50 border-zinc-700 text-zinc-300"
+              className="bg-neutral-800/50 border-neutral-700 text-neutral-300"
             />
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <label className="text-sm text-zinc-400">Role</label>
+            <label className="text-sm text-neutral-400">Role</label>
             <Input
               value={user?.role || ''}
               readOnly
-              className="bg-zinc-800/50 border-zinc-700 text-zinc-300 capitalize"
+              className="bg-neutral-800/50 border-neutral-700 text-neutral-300 capitalize"
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm text-zinc-400">Member Since</label>
+            <label className="text-sm text-neutral-400">Member Since</label>
             <Input
               value={user?.created_at ? new Date(user.created_at).toLocaleDateString() : ''}
               readOnly
-              className="bg-zinc-800/50 border-zinc-700 text-zinc-300"
+              className="bg-neutral-800/50 border-neutral-700 text-neutral-300"
             />
           </div>
         </div>
@@ -101,59 +101,59 @@ function ChangePasswordSection() {
   }
 
   return (
-    <Card className="bg-zinc-900/50 border-zinc-800">
+    <Card className="bg-neutral-900/50 border-neutral-800">
       <CardHeader>
-        <CardTitle className="text-zinc-100">Change Password</CardTitle>
-        <CardDescription className="text-zinc-400">Update your account password</CardDescription>
+        <CardTitle className="text-neutral-100">Change Password</CardTitle>
+        <CardDescription className="text-neutral-400">Update your account password</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-sm text-zinc-400">Current Password</label>
+            <label className="text-sm text-neutral-400">Current Password</label>
             <div className="relative">
               <Input
                 type={showCurrent ? 'text' : 'password'}
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                className="bg-zinc-800/50 border-zinc-700 text-zinc-300 pr-10"
+                className="bg-neutral-800/50 border-neutral-700 text-neutral-300 pr-10"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowCurrent(!showCurrent)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300"
               >
                 {showCurrent ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm text-zinc-400">New Password</label>
+            <label className="text-sm text-neutral-400">New Password</label>
             <div className="relative">
               <Input
                 type={showNew ? 'text' : 'password'}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="bg-zinc-800/50 border-zinc-700 text-zinc-300 pr-10"
+                className="bg-neutral-800/50 border-neutral-700 text-neutral-300 pr-10"
                 required
                 minLength={8}
               />
               <button
                 type="button"
                 onClick={() => setShowNew(!showNew)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300"
               >
                 {showNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm text-zinc-400">Confirm New Password</label>
+            <label className="text-sm text-neutral-400">Confirm New Password</label>
             <Input
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="bg-zinc-800/50 border-zinc-700 text-zinc-300"
+              className="bg-neutral-800/50 border-neutral-700 text-neutral-300"
               required
               minLength={8}
             />
@@ -179,19 +179,19 @@ function ApiKeyItem({
   onRevoke: (id: string) => void
 }) {
   return (
-    <div className="flex items-center justify-between p-3 rounded-lg bg-zinc-800/30 border border-zinc-800">
+    <div className="flex items-center justify-between p-3 rounded-lg bg-neutral-800/30 border border-neutral-800">
       <div className="flex items-center gap-3">
-        <Key className="h-4 w-4 text-zinc-500" />
+        <Key className="h-4 w-4 text-neutral-500" />
         <div>
-          <p className="text-sm text-zinc-200 font-medium">{keyItem.name}</p>
-          <p className="text-xs text-zinc-500">
+          <p className="text-sm text-neutral-200 font-medium">{keyItem.name}</p>
+          <p className="text-xs text-neutral-500">
             {keyItem.key_prefix}... &middot; Created {new Date(keyItem.created_at).toLocaleDateString()}
           </p>
         </div>
       </div>
       <button
         onClick={() => onRevoke(keyItem.id)}
-        className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+        className="p-1.5 rounded-lg text-neutral-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
         title="Revoke key"
       >
         <Trash2 className="h-4 w-4" />
@@ -242,11 +242,11 @@ function ApiKeysSection() {
   }
 
   return (
-    <Card className="bg-zinc-900/50 border-zinc-800">
+    <Card className="bg-neutral-900/50 border-neutral-800">
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
-          <CardTitle className="text-zinc-100">API Keys</CardTitle>
-          <CardDescription className="text-zinc-400">
+          <CardTitle className="text-neutral-100">API Keys</CardTitle>
+          <CardDescription className="text-neutral-400">
             Manage API keys for programmatic access
           </CardDescription>
         </div>
@@ -263,12 +263,12 @@ function ApiKeysSection() {
               Create Key
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-zinc-900 border-zinc-800">
+          <DialogContent className="bg-neutral-900 border-neutral-800">
             <DialogHeader>
-              <DialogTitle className="text-zinc-100">
+              <DialogTitle className="text-neutral-100">
                 {newKeyResult ? 'API Key Created' : 'Create API Key'}
               </DialogTitle>
-              <DialogDescription className="text-zinc-400">
+              <DialogDescription className="text-neutral-400">
                 {newKeyResult
                   ? 'Copy this key now — you will not be able to see it again.'
                   : 'Give your key a name and optionally set an expiration.'}
@@ -277,7 +277,7 @@ function ApiKeysSection() {
 
             {newKeyResult ? (
               <div className="space-y-4">
-                <div className="p-3 rounded-lg bg-zinc-800 border border-zinc-700">
+                <div className="p-3 rounded-lg bg-neutral-800 border border-neutral-700">
                   <code className="text-sm text-sidebar-active break-all select-all">
                     {newKeyResult.key}
                   </code>
@@ -293,25 +293,25 @@ function ApiKeysSection() {
             ) : (
               <div className="space-y-4">
                 <div className="space-y-1.5">
-                  <label className="text-sm text-zinc-400">Key Name</label>
+                  <label className="text-sm text-neutral-400">Key Name</label>
                   <Input
                     value={keyName}
                     onChange={(e) => setKeyName(e.target.value)}
                     placeholder="e.g. CI/CD Pipeline"
-                    className="bg-zinc-800/50 border-zinc-700 text-zinc-300"
+                    className="bg-neutral-800/50 border-neutral-700 text-neutral-300"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-sm text-zinc-400">Expiration (days)</label>
+                  <label className="text-sm text-neutral-400">Expiration (days)</label>
                   <Input
                     type="number"
                     value={expiresIn}
                     onChange={(e) => setExpiresIn(e.target.value)}
                     placeholder="90"
                     min={1}
-                    className="bg-zinc-800/50 border-zinc-700 text-zinc-300"
+                    className="bg-neutral-800/50 border-neutral-700 text-neutral-300"
                   />
-                  <p className="text-xs text-zinc-500">Leave empty for no expiration</p>
+                  <p className="text-xs text-neutral-500">Leave empty for no expiration</p>
                 </div>
                 <DialogFooter>
                   <Button
@@ -331,7 +331,7 @@ function ApiKeysSection() {
         {isLoading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-[52px] rounded-lg bg-zinc-800/20 animate-pulse" />
+              <div key={i} className="h-[52px] rounded-lg bg-neutral-800/20 animate-pulse" />
             ))}
           </div>
         ) : keys && keys.length > 0 ? (
@@ -342,9 +342,9 @@ function ApiKeysSection() {
           </div>
         ) : (
           <div className="text-center py-8">
-            <Key className="h-8 w-8 text-zinc-600 mx-auto mb-2" />
-            <p className="text-sm text-zinc-500">No API keys yet</p>
-            <p className="text-xs text-zinc-600 mt-1">
+            <Key className="h-8 w-8 text-neutral-600 mx-auto mb-2" />
+            <p className="text-sm text-neutral-500">No API keys yet</p>
+            <p className="text-xs text-neutral-600 mt-1">
               Create a key to use the Reconny API programmatically
             </p>
           </div>
@@ -365,25 +365,25 @@ function ThemeSection() {
   }
 
   return (
-    <Card className="bg-zinc-900/50 border-zinc-800">
+    <Card className="bg-neutral-900/50 border-neutral-800">
       <CardHeader>
-        <CardTitle className="text-zinc-100">Appearance</CardTitle>
-        <CardDescription className="text-zinc-400">Toggle between light and dark mode</CardDescription>
+        <CardTitle className="text-neutral-100">Appearance</CardTitle>
+        <CardDescription className="text-neutral-400">Toggle between light and dark mode</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             {isDark ? (
-              <Moon className="h-5 w-5 text-zinc-400" />
+              <Moon className="h-5 w-5 text-neutral-400" />
             ) : (
-              <Sun className="h-5 w-5 text-zinc-400" />
+              <Sun className="h-5 w-5 text-neutral-400" />
             )}
-            <span className="text-sm text-zinc-300">{isDark ? 'Dark Mode' : 'Light Mode'}</span>
+            <span className="text-sm text-neutral-300">{isDark ? 'Dark Mode' : 'Light Mode'}</span>
           </div>
           <button
             onClick={toggleTheme}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              isDark ? 'bg-sidebar-active' : 'bg-zinc-700'
+              isDark ? 'bg-sidebar-active' : 'bg-neutral-700'
             }`}
           >
             <span
@@ -402,8 +402,8 @@ export function SettingsPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-zinc-100">Settings</h1>
-        <p className="text-sm text-zinc-400 mt-1">Manage your account and API keys</p>
+        <h1 className="text-2xl font-semibold text-neutral-100">Settings</h1>
+        <p className="text-sm text-neutral-400 mt-1">Manage your account and API keys</p>
       </div>
 
       <ProfileSection />

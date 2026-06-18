@@ -138,12 +138,12 @@ function SidebarNavContent({ isCollapsed }: SidebarNavProps) {
                       className={`mx-2 my-0.5 flex flex-1 items-center gap-3 rounded-xl px-4 py-2.5 text-[13px] transition-colors duration-200 ${
                         active && !isCollapsed
                           ? 'bg-sidebar-active/10 text-sidebar-active font-medium'
-                          : 'text-zinc-400 hover:bg-sidebar-hover hover:text-zinc-200'
+                          : 'text-neutral-400 hover:bg-sidebar-hover hover:text-neutral-200'
                       } ${isCollapsed ? 'justify-center' : 'justify-start'}`}
                     >
                       <Icon
                         className={`h-[18px] w-[18px] flex-shrink-0 ${
-                          active ? 'text-sidebar-active' : 'text-zinc-500'
+                          active ? 'text-sidebar-active' : 'text-neutral-500'
                         }`}
                       />
                       <span
@@ -159,7 +159,7 @@ function SidebarNavContent({ isCollapsed }: SidebarNavProps) {
                     {hasSubItems && !isCollapsed && (
                       <button
                         onClick={() => toggleExpand(item.href)}
-                        className="mr-3 p-1 text-zinc-500 hover:text-zinc-300 transition-colors rounded-md hover:bg-sidebar-hover"
+                        className="mr-3 p-1 text-neutral-500 hover:text-neutral-300 transition-colors rounded-md hover:bg-sidebar-hover"
                         aria-label={isExpanded ? 'Collapse' : 'Expand'}
                       >
                         {isExpanded ? (
@@ -172,7 +172,7 @@ function SidebarNavContent({ isCollapsed }: SidebarNavProps) {
                   </div>
 
                   {hasSubItems && isExpanded && !isCollapsed && (
-                    <div className="flex flex-col gap-[2px] mt-0.5 ml-[26px] pl-4 border-l border-zinc-800">
+                    <div className="flex flex-col gap-[2px] mt-0.5 ml-[26px] pl-4 border-l border-neutral-800">
                       {item.subItems!.map((subItem) => (
                         <Link
                           key={subItem.href}
@@ -180,7 +180,7 @@ function SidebarNavContent({ isCollapsed }: SidebarNavProps) {
                           className={`flex items-center pr-4 py-2.5 mx-3 text-[13px] rounded-lg transition-colors duration-200 ${
                             isSubItemActive(item.href, subItem.href)
                               ? 'text-sidebar-active font-medium'
-                              : 'text-zinc-400 hover:text-zinc-200'
+                              : 'text-neutral-400 hover:text-neutral-200'
                           }`}
                         >
                           {subItem.label}
@@ -196,35 +196,35 @@ function SidebarNavContent({ isCollapsed }: SidebarNavProps) {
       </nav>
 
       {!isCollapsed && (
-        <div className="px-4 py-4 space-y-0.5 shrink-0 border-t border-zinc-800 mt-2">
+        <div className="px-4 py-4 space-y-0.5 shrink-0 border-t border-neutral-800 mt-2">
           <Link
             to="/settings"
-            className="flex items-center gap-3 px-3 py-2.5 text-zinc-400 hover:text-zinc-200 hover:bg-sidebar-hover rounded-xl transition-colors text-[13px]"
+            className="flex items-center gap-3 px-3 py-2.5 text-neutral-400 hover:text-neutral-200 hover:bg-sidebar-hover rounded-xl transition-colors text-[13px]"
           >
-            <HelpCircle className="h-[18px] w-[18px] text-zinc-500" />
+            <HelpCircle className="h-[18px] w-[18px] text-neutral-500" />
             <span className="font-medium">Help & Information</span>
           </Link>
           <button
             onClick={logout}
-            className="flex items-center gap-3 w-full px-3 py-2.5 text-zinc-400 hover:text-zinc-200 hover:bg-sidebar-hover rounded-xl transition-colors text-[13px]"
+            className="flex items-center gap-3 w-full px-3 py-2.5 text-neutral-400 hover:text-neutral-200 hover:bg-sidebar-hover rounded-xl transition-colors text-[13px]"
           >
-            <LogOut className="h-[18px] w-[18px] text-zinc-500" />
+            <LogOut className="h-[18px] w-[18px] text-neutral-500" />
             <span className="font-medium">Log out</span>
           </button>
         </div>
       )}
       {isCollapsed && (
-        <div className="px-2 py-4 space-y-0.5 shrink-0 border-t border-zinc-800 mt-2 flex flex-col items-center">
+        <div className="px-2 py-4 space-y-0.5 shrink-0 border-t border-neutral-800 mt-2 flex flex-col items-center">
           <Link
             to="/settings"
-            className="p-2.5 text-zinc-500 hover:text-zinc-200 hover:bg-sidebar-hover rounded-xl transition-colors"
+            className="p-2.5 text-neutral-500 hover:text-neutral-200 hover:bg-sidebar-hover rounded-xl transition-colors"
             aria-label="Help"
           >
             <HelpCircle className="h-[18px] w-[18px]" />
           </Link>
           <button
             onClick={logout}
-            className="p-2.5 text-zinc-500 hover:text-zinc-200 hover:bg-sidebar-hover rounded-xl transition-colors"
+            className="p-2.5 text-neutral-500 hover:text-neutral-200 hover:bg-sidebar-hover rounded-xl transition-colors"
             aria-label="Log out"
           >
             <LogOut className="h-[18px] w-[18px]" />
