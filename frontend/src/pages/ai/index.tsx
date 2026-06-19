@@ -7,9 +7,9 @@ import type { AggregatedStats } from '@/types'
 
 function RiskScoreGauge({ score }: { score: number }) {
   const getColor = (s: number) => {
-    if (s >= 70) return 'text-red-400'
-    if (s >= 40) return 'text-yellow-400'
-    return 'text-green-400'
+    if (s >= 70) return 'text-neutral-300'
+    if (s >= 40) return 'text-neutral-300'
+    return 'text-neutral-300'
   }
 
   const getLabel = (s: number) => {
@@ -46,20 +46,20 @@ function RiskScoreGauge({ score }: { score: number }) {
 
 function StatCard({ label, value, color }: { label: string; value: number | string; color?: string }) {
   return (
-    <div className="bg-gray-800/50 rounded-lg p-4">
-      <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">{label}</p>
-      <p className={`text-2xl font-bold ${color || 'text-white'}`}>{value}</p>
+    <div className="bg-neutral-800/50 rounded-lg p-4">
+      <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">{label}</p>
+      <p className={`text-2xl font-bold ${color || 'text-neutral-50'}`}>{value}</p>
     </div>
   )
 }
 
 function VsSeverityChart({ stats }: { stats: AggregatedStats }) {
   const severities = [
-    { key: 'critical', label: 'Critical', color: 'bg-red-500' },
-    { key: 'high', label: 'High', color: 'bg-orange-500' },
-    { key: 'medium', label: 'Medium', color: 'bg-yellow-500' },
-    { key: 'low', label: 'Low', color: 'bg-blue-500' },
-    { key: 'info', label: 'Info', color: 'bg-gray-500' },
+    { key: 'critical', label: 'Critical', color: 'bg-neutral-700' },
+    { key: 'high', label: 'High', color: 'bg-neutral-600' },
+    { key: 'medium', label: 'Medium', color: 'bg-neutral-600' },
+    { key: 'low', label: 'Low', color: 'bg-primary' },
+    { key: 'info', label: 'Info', color: 'bg-neutral-500' },
   ]
 
   const maxVal = Math.max(
@@ -74,12 +74,12 @@ function VsSeverityChart({ stats }: { stats: AggregatedStats }) {
         const pct = (val / maxVal) * 100
         return (
           <div key={s.key}>
-            <div className="flex justify-between text-xs text-gray-400 mb-1">
+            <div className="flex justify-between text-xs text-neutral-400 mb-1">
               <span>{s.label}</span>
               <span>{val}</span>
             </div>
-            <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
-              <div className={`h-full ${s.color} rounded-full transition-all`} style={{ width: `${pct}%` }} />
+            <div className="h-2 bg-neutral-800 rounded-lg overflow-hidden">
+              <div className={`h-full ${s.color} rounded-lg transition-all`} style={{ width: `${pct}%` }} />
             </div>
           </div>
         )
@@ -139,36 +139,36 @@ export function AIAnalysisPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-light text-white">AI Analysis</h1>
-          <p className="text-gray-400 text-sm mt-1">Automated intelligence and risk assessment</p>
+          <h1 className="text-3xl font-light text-neutral-50">AI Analysis</h1>
+          <p className="text-neutral-400 text-sm mt-1">Automated intelligence and risk assessment</p>
         </div>
       </div>
 
-      <div className="flex gap-3 mb-6">
+      <div className="flex gap-2 mb-6">
         <input
           type="text"
           value={inputJobId}
           onChange={(e) => setInputJobId(e.target.value)}
           placeholder="Enter scan job ID..."
-          className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 w-80"
+          className="bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-2 text-neutral-50 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary/50 w-80"
         />
         <button
           onClick={() => setJobId(inputJobId)}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm"
+          className="px-4 py-2 bg-primary text-sidebar-bg hover:bg-primary/90 rounded-lg text-sm"
         >
           Load Analysis
         </button>
       </div>
 
       {!jobId ? (
-        <div className="text-center py-20 text-gray-500">
+        <div className="text-center py-20 text-neutral-500">
           <p className="text-lg">Enter a scan job ID to view AI analysis</p>
         </div>
       ) : (
         <ErrorBoundary><div className="space-y-6">
           {/* Risk Score + Stats Row */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-            <div className="bg-gray-900 rounded-xl border border-gray-800 p-6 flex items-center justify-center">
+            <div className="bg-neutral-900 rounded-lg border border-neutral-800 p-6 flex items-center justify-center">
               {riskScore ? (
                 <RiskScoreGauge score={(riskScore as any)?.overall_score || 0} />
               ) : (
@@ -181,18 +181,18 @@ export function AIAnalysisPage() {
             <div className="lg:col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-4">
               {stats ? (
                 <>
-                  <StatCard label="Subdomains" value={stats?.total_subdomains || 0} color="text-blue-400" />
-                  <StatCard label="Live Hosts" value={stats?.live_subdomains || 0} color="text-green-400" />
-                  <StatCard label="Endpoints" value={stats?.total_endpoints || 0} color="text-purple-400" />
-                  <StatCard label="Vulnerabilities" value={stats?.total_vulnerabilities || 0} color="text-red-400" />
-                  <StatCard label="Critical" value={stats?.vulnerabilities_by_severity?.critical || 0} color="text-red-500" />
-                  <StatCard label="High" value={stats?.vulnerabilities_by_severity?.high || 0} color="text-orange-400" />
+                  <StatCard label="Subdomains" value={stats?.total_subdomains || 0} color="text-primary" />
+                  <StatCard label="Live Hosts" value={stats?.live_subdomains || 0} color="text-neutral-300" />
+                  <StatCard label="Endpoints" value={stats?.total_endpoints || 0} color="text-neutral-300" />
+                  <StatCard label="Vulnerabilities" value={stats?.total_vulnerabilities || 0} color="text-neutral-300" />
+                  <StatCard label="Critical" value={stats?.vulnerabilities_by_severity?.critical || 0} color="text-neutral-300" />
+                  <StatCard label="High" value={stats?.vulnerabilities_by_severity?.high || 0} color="text-neutral-300" />
                 </>
               ) : (
                 <>
                   {['Subdomains', 'Live Hosts', 'Endpoints', 'Vulnerabilities', 'Critical', 'High'].map((label) => (
-                    <div key={label} className="bg-gray-800/50 rounded-lg p-4">
-                      <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">{label}</p>
+                    <div key={label} className="bg-neutral-800/50 rounded-lg p-4">
+                      <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">{label}</p>
                       <Skeleton variant="text" width={60} height={28} />
                     </div>
                   ))}
@@ -203,25 +203,25 @@ export function AIAnalysisPage() {
 
           {/* Vulnerabilities by Severity */}
           {stats && (
-            <div className="bg-gray-900 rounded-xl border border-gray-800 p-6">
-              <h2 className="text-lg font-semibold text-white mb-4">Vulnerabilities by Severity</h2>
+            <div className="bg-neutral-900 rounded-lg border border-neutral-800 p-6">
+              <h2 className="text-lg font-semibold text-neutral-50 mb-4">Vulnerabilities by Severity</h2>
               <VsSeverityChart stats={stats} />
             </div>
           )}
 
           {/* Executive Summary */}
           {summaryLoading ? (
-            <div className="bg-gray-900 rounded-xl border border-gray-800 p-6">
-              <h2 className="text-lg font-semibold text-white mb-4">Executive Summary</h2>
+            <div className="bg-neutral-900 rounded-lg border border-neutral-800 p-6">
+              <h2 className="text-lg font-semibold text-neutral-50 mb-4">Executive Summary</h2>
               <div className="space-y-3">
                 <Skeleton variant="text" count={4} />
               </div>
             </div>
           ) : summary ? (
-            <div className="bg-gray-900 rounded-xl border border-gray-800 p-6">
-              <h2 className="text-lg font-semibold text-white mb-4">Executive Summary</h2>
+            <div className="bg-neutral-900 rounded-lg border border-neutral-800 p-6">
+              <h2 className="text-lg font-semibold text-neutral-50 mb-4">Executive Summary</h2>
               <div className="prose prose-invert max-w-none">
-                <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">
+                <p className="text-neutral-300 leading-relaxed whitespace-pre-wrap">
                   {(summary as any).content || summary.summary || 'No summary available'}
                 </p>
               </div>
@@ -230,20 +230,20 @@ export function AIAnalysisPage() {
 
           {/* Prioritized Recommendations / Attack Vectors */}
           {attackVectors && Array.isArray(attackVectors) && attackVectors.length > 0 && (
-            <div className="bg-gray-900 rounded-xl border border-gray-800 p-6">
-              <h2 className="text-lg font-semibold text-white mb-4">Prioritized Recommendations</h2>
+            <div className="bg-neutral-900 rounded-lg border border-neutral-800 p-6">
+              <h2 className="text-lg font-semibold text-neutral-50 mb-4">Prioritized Recommendations</h2>
               <div className="space-y-3">
                 {attackVectors.map((v: any) => (
-                  <div key={v.id} className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50">
+                  <div key={v.id} className="bg-neutral-800/50 rounded-lg p-4 border border-neutral-700/50">
                     <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-medium text-white">{v.title}</h3>
+                      <h3 className="font-medium text-neutral-50">{v.title}</h3>
                       <SeverityBadge severity={v.priority} />
                     </div>
-                    <p className="text-sm text-gray-400 line-clamp-2">{v.summary}</p>
+                    <p className="text-sm text-neutral-400 line-clamp-2">{v.summary}</p>
                     {v.affected_assets && v.affected_assets.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-2">
                         {v.affected_assets.slice(0, 5).map((asset: string) => (
-                          <span key={asset} className="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">
+                          <span key={asset} className="px-2 py-0.5 rounded text-xs bg-neutral-800 text-neutral-300">
                             {asset}
                           </span>
                         ))}
@@ -257,20 +257,20 @@ export function AIAnalysisPage() {
 
           {/* All Insights */}
           {insights?.items && insights.items.length > 0 && (
-            <div className="bg-gray-900 rounded-xl border border-gray-800 p-6">
-              <h2 className="text-lg font-semibold text-white mb-4">All AI Insights ({insights.total})</h2>
+            <div className="bg-neutral-900 rounded-lg border border-neutral-800 p-6">
+              <h2 className="text-lg font-semibold text-neutral-50 mb-4">All AI Insights ({insights.total})</h2>
               <div className="space-y-2">
                 {insights.items.map((insight) => (
-                  <div key={insight.id} className="bg-gray-800/30 rounded-lg p-3 border border-gray-700/30">
+                  <div key={insight.id} className="bg-neutral-800/30 rounded-lg p-3 border border-neutral-700/30">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs text-gray-500 uppercase">{insight.type}</span>
+                      <span className="text-xs text-neutral-500 uppercase">{insight.type}</span>
                       <SeverityBadge severity={insight.priority} />
                       {insight.is_actionable && (
-                        <span className="text-xs text-blue-400">Actionable</span>
+                        <span className="text-xs text-primary">Actionable</span>
                       )}
                     </div>
-                    <p className="text-sm text-white">{insight.title}</p>
-                    <p className="text-xs text-gray-400 mt-1 line-clamp-2">{insight.summary || insight.content}</p>
+                    <p className="text-sm text-neutral-50">{insight.title}</p>
+                    <p className="text-xs text-neutral-400 mt-1 line-clamp-2">{insight.summary || insight.content}</p>
                   </div>
                 ))}
               </div>

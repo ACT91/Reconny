@@ -15,17 +15,17 @@ export function ScanProgressBar({ progress, status, size = 'md', showLabel = tru
   return (
     <div className="w-full">
       {showLabel && (
-        <div className="flex justify-between text-xs text-gray-400 mb-1">
+        <div className="flex justify-between text-xs text-neutral-400 mb-1">
           <span>Progress</span>
           <span>{Math.round(progress)}%</span>
         </div>
       )}
-      <div className={clsx('w-full bg-gray-800 rounded-full overflow-hidden', heights[size])}>
+      <div className={clsx('w-full bg-neutral-800 rounded-lg overflow-hidden', heights[size])}>
         <div
           className={clsx(
             heights[size],
-            'rounded-full transition-all duration-500 ease-out',
-            isError ? 'bg-red-500' : isRunning ? 'bg-blue-500' : 'bg-green-500'
+            'rounded-lg transition-all duration-500 ease-out',
+            isError ? 'bg-neutral-700' : isRunning ? 'bg-primary/50' : 'bg-neutral-600'
           )}
           style={{ width: `${Math.min(progress, 100)}%` }}
         />

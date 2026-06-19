@@ -44,10 +44,10 @@ function NewScanModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={onClose}>
-      <div className="bg-gray-900 rounded-xl border border-gray-800 p-6 w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
-        <h2 className="text-xl font-semibold text-white mb-4">New Scan</h2>
+      <div className="bg-neutral-900 rounded-lg border border-neutral-800 p-6 w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
+        <h2 className="text-xl font-semibold text-neutral-50 mb-4">New Scan</h2>
         {error && (
-          <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-800 text-red-300 text-sm">{error}</div>
+          <div className="mb-4 p-3 rounded-lg bg-neutral-800/50 border border-neutral-700 text-neutral-300 text-sm">{error}</div>
         )}
         <form
           onSubmit={(e) => {
@@ -57,24 +57,24 @@ function NewScanModal({
           }}
         >
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-300 mb-2">Target Domain</label>
+            <label className="block text-sm font-medium text-neutral-300 mb-2">Target Domain</label>
             <input
               type="text"
               value={targetDomain}
               onChange={(e) => setTargetDomain(e.target.value)}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-2.5 text-neutral-50 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary/50"
               placeholder="example.com"
               required
             />
           </div>
-          <div className="flex gap-3 justify-end">
-            <button type="button" onClick={onClose} className="px-4 py-2 rounded-lg text-gray-300 hover:text-white transition-colors">
+          <div className="flex gap-2 justify-end">
+            <button type="button" onClick={onClose} className="px-4 py-2 rounded-lg text-neutral-300 hover:text-neutral-50 transition-colors">
               Cancel
             </button>
             <button
               type="submit"
               disabled={startScan.isPending}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50"
+              className="px-4 py-2 bg-primary text-sidebar-bg hover:bg-primary/90 rounded-lg transition-colors disabled:opacity-50"
             >
               {startScan.isPending ? 'Starting...' : 'Start Scan'}
             </button>
@@ -140,46 +140,46 @@ function ScanDetailPanel({ job, onClose }: { job: ScanJob; onClose: () => void }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={onClose}>
-      <div className="bg-gray-900 rounded-xl border border-gray-800 w-full max-w-2xl mx-4 max-h-[80vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
-        <div className="p-6 border-b border-gray-800 flex items-center justify-between">
+      <div className="bg-neutral-900 rounded-lg border border-neutral-800 w-full max-w-2xl mx-4 max-h-[80vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+        <div className="p-6 border-b border-neutral-800 flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-semibold text-white">{job.target_domain}</h2>
+            <h2 className="text-xl font-semibold text-neutral-50">{job.target_domain}</h2>
             <div className="flex items-center gap-2 mt-1">
               <StatusBadge status={job.status} />
-              <span className="text-sm text-gray-400">Started {new Date(job.created_at).toLocaleString()}</span>
+              <span className="text-sm text-neutral-400">Started {new Date(job.created_at).toLocaleString()}</span>
             </div>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-white text-xl">&times;</button>
+          <button onClick={onClose} className="text-neutral-400 hover:text-neutral-50 text-xl">&times;</button>
         </div>
 
-        <div className="px-4 py-2 border-b border-gray-800 flex gap-3">
-          <Link to={`/assets/${job.id}`} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-blue-400 transition-colors">
+        <div className="px-4 py-2 border-b border-neutral-800 flex gap-2">
+          <Link to={`/assets/${job.id}`} className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-primary transition-colors">
             <Globe className="h-3.5 w-3.5" /> Assets
           </Link>
-          <Link to={`/endpoints/${job.id}`} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-blue-400 transition-colors">
+          <Link to={`/endpoints/${job.id}`} className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-primary transition-colors">
             <Network className="h-3.5 w-3.5" /> Endpoints
           </Link>
-          <Link to={`/findings/${job.id}`} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-blue-400 transition-colors">
+          <Link to={`/findings/${job.id}`} className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-primary transition-colors">
             <AlertTriangle className="h-3.5 w-3.5" /> Findings
           </Link>
-          <Link to={`/ai-analysis/${job.id}`} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-blue-400 transition-colors">
+          <Link to={`/ai-analysis/${job.id}`} className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-primary transition-colors">
             <Bot className="h-3.5 w-3.5" /> AI Analysis
           </Link>
-          <Link to={`/reports/${job.id}`} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-blue-400 transition-colors">
+          <Link to={`/reports/${job.id}`} className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-primary transition-colors">
             <FileText className="h-3.5 w-3.5" /> Reports
           </Link>
         </div>
 
-        <div className="flex border-b border-gray-800">
+        <div className="flex border-b border-neutral-800">
           <button
             onClick={() => setActiveTab('progress')}
-            className={`px-4 py-2 text-sm font-medium ${activeTab === 'progress' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-400 hover:text-white'}`}
+            className={`px-4 py-2 text-sm font-medium ${activeTab === 'progress' ? 'text-primary border-b-2 border-primary' : 'text-neutral-400 hover:text-neutral-50'}`}
           >
             Progress
           </button>
           <button
             onClick={() => setActiveTab('logs')}
-            className={`px-4 py-2 text-sm font-medium ${activeTab === 'logs' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-400 hover:text-white'}`}
+            className={`px-4 py-2 text-sm font-medium ${activeTab === 'logs' ? 'text-primary border-b-2 border-primary' : 'text-neutral-400 hover:text-neutral-50'}`}
           >
             Live Logs
           </button>
@@ -191,9 +191,9 @@ function ScanDetailPanel({ job, onClose }: { job: ScanJob; onClose: () => void }
               <ScanProgressBar progress={displayProgress.overall_progress} status={job.status} size="lg" />
               <div className="grid grid-cols-2 gap-4">
                 {displayProgress.stages?.map((stage) => (
-                  <div key={stage.stage} className="bg-gray-800/50 rounded-lg p-3">
+                  <div key={stage.stage} className="bg-neutral-800/50 rounded-lg p-3">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-gray-300 truncate">{stage.stage.replace(/\d+_/, '').replace(/_/g, ' ')}</span>
+                      <span className="text-sm text-neutral-300 truncate">{stage.stage.replace(/\d+_/, '').replace(/_/g, ' ')}</span>
                       <StatusBadge status={stage.status} />
                     </div>
                     <ScanProgressBar progress={stage.progress_percent} status={stage.status} size="sm" showLabel={false} />
@@ -207,14 +207,14 @@ function ScanDetailPanel({ job, onClose }: { job: ScanJob; onClose: () => void }
         </div>
 
         {job.status === 'running' && (
-          <div className="p-4 border-t border-gray-800">
+          <div className="p-4 border-t border-neutral-800">
             <button
               onClick={async () => {
                 try {
                   await scanApi.cancel(job.id)
                 } catch {}
               }}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm transition-colors"
+              className="px-4 py-2 bg-destructive hover:bg-destructive/90 text-neutral-50 rounded-lg text-sm transition-colors"
             >
               Cancel Scan
             </button>
@@ -253,7 +253,7 @@ export function ScansPage() {
     () => [
       columnHelper.accessor('target_domain', {
         header: 'Target',
-        cell: (info) => <span className="font-medium text-white">{info.getValue()}</span>,
+        cell: (info) => <span className="font-medium text-neutral-50">{info.getValue()}</span>,
       }),
       columnHelper.accessor('status', {
         header: 'Status',
@@ -262,7 +262,7 @@ export function ScansPage() {
       columnHelper.accessor('current_stage', {
         header: 'Current Stage',
         cell: (info) => (
-          <span className="text-sm text-gray-400">
+          <span className="text-sm text-neutral-400">
             {info.getValue() ? info.getValue()!.replace(/\d+_/, '').replace(/_/g, ' ') : '—'}
           </span>
         ),
@@ -274,7 +274,7 @@ export function ScansPage() {
       columnHelper.accessor('created_at', {
         header: 'Created',
         cell: (info) => (
-          <span className="text-sm text-gray-400">{new Date(info.getValue()).toLocaleDateString()}</span>
+          <span className="text-sm text-neutral-400">{new Date(info.getValue()).toLocaleDateString()}</span>
         ),
       }),
       columnHelper.display({
@@ -283,7 +283,7 @@ export function ScansPage() {
           <div className="flex gap-2">
             <button
               onClick={() => setSelectedJob(row.original)}
-              className="text-sm text-blue-400 hover:text-blue-300"
+              className="text-sm text-primary hover:text-primary"
             >
               View
             </button>
@@ -293,7 +293,7 @@ export function ScansPage() {
                   e.stopPropagation()
                   cancelScan.mutate(row.original.id)
                 }}
-                className="text-sm text-red-400 hover:text-red-300"
+                className="text-sm text-neutral-300 hover:text-neutral-300"
               >
                 Cancel
               </button>
@@ -324,12 +324,12 @@ export function ScansPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-light text-white">Scans</h1>
-          <p className="text-gray-400 text-sm mt-1">Manage and monitor your reconnaissance scans</p>
+          <h1 className="text-3xl font-light text-neutral-50">Scans</h1>
+          <p className="text-neutral-400 text-sm mt-1">Manage and monitor your reconnaissance scans</p>
         </div>
         <button
           onClick={() => setShowNewScan(true)}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm"
+          className="px-4 py-2 bg-primary text-sidebar-bg hover:bg-primary/90 rounded-lg transition-colors text-sm"
         >
           + New Scan
         </button>
@@ -341,26 +341,26 @@ export function ScansPage() {
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
           placeholder="Search scans..."
-          className="w-full max-w-xs bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full max-w-xs bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-2 text-neutral-50 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary/50"
         />
       </div>
 
       <ErrorBoundary>
       {isLoading ? (
-        <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
+        <div className="bg-neutral-900 rounded-lg border border-neutral-800 overflow-hidden">
           <SkeletonTable rows={6} cols={6} />
         </div>
       ) : (
-      <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
+      <div className="bg-neutral-900 rounded-lg border border-neutral-800 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id} className="border-b border-gray-800">
+                <tr key={headerGroup.id} className="border-b border-neutral-800">
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="text-left text-xs font-medium text-gray-400 uppercase tracking-wider px-4 py-3 cursor-pointer hover:text-white"
+                      className="text-left text-xs font-medium text-neutral-400 uppercase tracking-wider px-4 py-3 cursor-pointer hover:text-neutral-50"
                       onClick={header.column.getToggleSortingHandler()}
                     >
                       {flexRender(header.column.columnDef.header, header.getContext())}
@@ -373,7 +373,7 @@ export function ScansPage() {
             <tbody>
               {table.getRowModel().rows.length === 0 ? (
                 <tr>
-                  <td colSpan={columns.length} className="text-center py-12 text-gray-400">
+                  <td colSpan={columns.length} className="text-center py-12 text-neutral-400">
                     No scans yet. Start your first scan!
                   </td>
                 </tr>
@@ -381,7 +381,7 @@ export function ScansPage() {
                 table.getRowModel().rows.map((row) => (
                   <tr
                     key={row.id}
-                    className="border-b border-gray-800/50 hover:bg-gray-800/30 cursor-pointer"
+                    className="border-b border-neutral-800/50 hover:bg-neutral-800/30 cursor-pointer"
                     onClick={() => setSelectedJob(row.original)}
                   >
                     {row.getVisibleCells().map((cell) => (
@@ -396,22 +396,22 @@ export function ScansPage() {
           </table>
         </div>
 
-        <div className="flex items-center justify-between px-4 py-3 border-t border-gray-800">
-          <span className="text-sm text-gray-400">
+        <div className="flex items-center justify-between px-4 py-3 border-t border-neutral-800">
+          <span className="text-sm text-neutral-400">
             Page {pagination.pageIndex + 1} of {scansData ? Math.max(1, Math.ceil(scansData.total / pagination.pageSize)) : 1} ({scansData?.total || 0} total)
           </span>
           <div className="flex gap-2">
             <button
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
-              className="px-3 py-1 bg-gray-800 rounded text-sm text-gray-300 disabled:opacity-50"
+              className="px-3 py-1 bg-neutral-800 rounded text-sm text-neutral-300 disabled:opacity-50"
             >
               Prev
             </button>
             <button
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
-              className="px-3 py-1 bg-gray-800 rounded text-sm text-gray-300 disabled:opacity-50"
+              className="px-3 py-1 bg-neutral-800 rounded text-sm text-neutral-300 disabled:opacity-50"
             >
               Next
             </button>

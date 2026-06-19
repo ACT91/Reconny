@@ -28,11 +28,11 @@ export function LiveLogsViewer({ logs, maxHeight = '400px', filter }: LiveLogsVi
     : logs
 
   const levelColors: Record<string, string> = {
-    debug: 'text-gray-500',
-    info: 'text-blue-400',
-    warning: 'text-yellow-400',
-    error: 'text-red-400',
-    critical: 'text-red-500 font-bold',
+    debug: 'text-neutral-500',
+    info: 'text-primary',
+    warning: 'text-neutral-300',
+    error: 'text-neutral-300',
+    critical: 'text-neutral-300 font-bold',
   }
 
   return (
@@ -41,20 +41,20 @@ export function LiveLogsViewer({ logs, maxHeight = '400px', filter }: LiveLogsVi
       style={{ maxHeight }}
     >
       {filtered.length === 0 && (
-        <div className="text-gray-500 text-center py-8">No logs yet</div>
+        <div className="text-neutral-500 text-center py-8">No logs yet</div>
       )}
       {filtered.map((log, i) => (
         <div key={log.id || i} className="flex gap-2 py-0.5">
-          <span className="text-gray-600 shrink-0">
+          <span className="text-neutral-600 shrink-0">
             {log.timestamp ? new Date(log.timestamp).toLocaleTimeString() : ''}
           </span>
           {log.stage && (
-            <span className="text-purple-400 shrink-0">[{log.stage}]</span>
+            <span className="text-neutral-300 shrink-0">[{log.stage}]</span>
           )}
-          <span className={clsx('shrink-0', levelColors[log.level] || 'text-gray-400')}>
+          <span className={clsx('shrink-0', levelColors[log.level] || 'text-neutral-400')}>
             {log.level.toUpperCase()}
           </span>
-          <span className="text-gray-200 break-all">{log.message}</span>
+          <span className="text-neutral-200 break-all">{log.message}</span>
         </div>
       ))}
       <div ref={bottomRef} />

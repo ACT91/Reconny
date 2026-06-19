@@ -25,11 +25,11 @@ function StatCard({
   active?: boolean
 }) {
   return (
-    <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-5 hover:bg-neutral-900/80 transition-colors">
+    <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg p-5 hover:bg-neutral-900/80 transition-colors">
       <div className="flex items-center justify-between mb-3">
         <span className="text-xs font-medium text-neutral-500 uppercase tracking-wider">{label}</span>
-        <div className={`h-9 w-9 rounded-lg flex items-center justify-center ${active ? 'bg-sidebar-active/10' : 'bg-neutral-800/50'}`}>
-          <Icon className={`h-4 w-4 ${active ? 'text-sidebar-active' : 'text-neutral-400'}`} />
+        <div className={`h-9 w-9 rounded-lg flex items-center justify-center ${active ? 'bg-primary/10' : 'bg-neutral-800/50'}`}>
+          <Icon className={`h-4 w-4 ${active ? 'text-primary' : 'text-neutral-400'}`} />
         </div>
       </div>
       <div className="text-2xl font-bold text-neutral-100">{value}</div>
@@ -40,21 +40,21 @@ function StatCard({
 
 function SeverityDot({ severity }: { severity: string }) {
   const colors: Record<string, string> = {
-    critical: 'bg-red-500',
-    high: 'bg-orange-500',
-    medium: 'bg-yellow-500',
-    low: 'bg-blue-500',
+    critical: 'bg-neutral-700',
+    high: 'bg-neutral-600',
+    medium: 'bg-neutral-600',
+    low: 'bg-primary/50',
     info: 'bg-neutral-500',
   }
-  return <span className={`inline-block h-2 w-2 rounded-full ${colors[severity] || 'bg-neutral-500'}`} />
+  return <span className={`inline-block h-2 w-2 rounded-lg ${colors[severity] || 'bg-neutral-500'}`} />
 }
 
 function SeverityBadge({ severity }: { severity: string }) {
   const styles: Record<string, string> = {
-    critical: 'bg-red-900/30 text-red-300 border-red-800/50',
-    high: 'bg-orange-900/30 text-orange-300 border-orange-800/50',
-    medium: 'bg-yellow-900/30 text-yellow-300 border-yellow-800/50',
-    low: 'bg-blue-900/30 text-blue-300 border-blue-800/50',
+    critical: 'bg-neutral-800/50 text-neutral-300 border-neutral-700/50',
+    high: 'bg-neutral-600/10 text-neutral-300 border-orange-800/50',
+    medium: 'bg-neutral-600/10 text-neutral-300 border-amber-800/50',
+    low: 'bg-primary/10 text-primary border-primary/50',
     info: 'bg-neutral-800 text-neutral-400 border-neutral-700',
   }
   return (
@@ -78,10 +78,10 @@ function timeAgo(dateStr: string | null): string {
 
 function RiskBar({ label, count, max }: { label: string; count: number; max: number }) {
   const colors: Record<string, string> = {
-    critical: 'bg-red-500',
-    high: 'bg-orange-500',
-    medium: 'bg-yellow-500',
-    low: 'bg-blue-500',
+    critical: 'bg-neutral-700',
+    high: 'bg-neutral-600',
+    medium: 'bg-neutral-600',
+    low: 'bg-primary/50',
     info: 'bg-neutral-500',
   }
   const pct = max > 0 ? (count / max) * 100 : 0
@@ -94,8 +94,8 @@ function RiskBar({ label, count, max }: { label: string; count: number; max: num
         </div>
         <span className="text-neutral-400">{count}</span>
       </div>
-      <div className="h-1.5 bg-neutral-800 rounded-full overflow-hidden">
-        <div className={`h-full ${colors[label]} rounded-full transition-all`} style={{ width: `${pct}%` }} />
+      <div className="h-1.5 bg-neutral-800 rounded-lg overflow-hidden">
+        <div className={`h-full ${colors[label]} rounded-lg transition-all`} style={{ width: `${pct}%` }} />
       </div>
     </div>
   )
@@ -103,9 +103,9 @@ function RiskBar({ label, count, max }: { label: string; count: number; max: num
 
 function ProgressBar({ value, color }: { value: number; color?: string }) {
   return (
-    <div className="h-1.5 bg-neutral-800 rounded-full overflow-hidden">
+    <div className="h-1.5 bg-neutral-800 rounded-lg overflow-hidden">
       <div
-        className={`h-full rounded-full transition-all ${color || 'bg-sidebar-active'}`}
+        className={`h-full rounded-lg transition-all ${color || 'bg-primary'}`}
         style={{ width: `${Math.min(value, 100)}%` }}
       />
     </div>
@@ -121,14 +121,14 @@ export function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="space-y-8 pb-8">
+      <div className="space-y-6 pb-8">
         <div>
           <div className="h-8 w-48 bg-neutral-800 rounded-lg animate-pulse mb-2" />
           <div className="h-4 w-72 bg-neutral-800/50 rounded animate-pulse" />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-5">
+            <div key={i} className="bg-neutral-900/50 border border-neutral-800 rounded-lg p-5">
               <div className="h-8 w-24 bg-neutral-800 rounded animate-pulse mb-3" />
               <div className="h-7 w-16 bg-neutral-800 rounded animate-pulse" />
             </div>
@@ -147,9 +147,9 @@ export function Dashboard() {
   )
 
   return (
-    <div className="space-y-8 pb-8">
+    <div className="space-y-6 pb-8">
       <div>
-        <h1 className="text-3xl font-light text-white">Dashboard</h1>
+        <h1 className="text-3xl font-light text-neutral-50">Dashboard</h1>
         <p className="text-neutral-400 text-sm mt-1">Your attack surface overview at a glance</p>
       </div>
 
@@ -184,7 +184,7 @@ export function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Findings */}
-        <div className="lg:col-span-2 bg-neutral-900/50 border border-neutral-800 rounded-xl overflow-hidden">
+        <div className="lg:col-span-2 bg-neutral-900/50 border border-neutral-800 rounded-lg overflow-hidden">
           <div className="p-5 border-b border-neutral-800 flex items-center justify-between">
             <div>
               <h2 className="text-base font-semibold text-neutral-100">Recent Findings</h2>
@@ -210,7 +210,7 @@ export function Dashboard() {
                     <p className="text-sm font-medium text-neutral-200 truncate">{f.name}</p>
                     <p className="text-xs text-neutral-500 truncate">{f.url}</p>
                   </div>
-                  <div className="flex items-center gap-3 shrink-0">
+                  <div className="flex items-center gap-2 shrink-0">
                     <SeverityBadge severity={f.severity} />
                     <span className="text-xs text-neutral-500">{timeAgo(f.discovered_at)}</span>
                   </div>
@@ -224,7 +224,7 @@ export function Dashboard() {
                 </span>
                 <Link
                   to="/findings"
-                  className="text-xs text-sidebar-active font-medium hover:underline inline-flex items-center gap-1"
+                  className="text-xs text-primary font-medium hover:underline inline-flex items-center gap-1"
                 >
                   View all <ArrowRight className="h-3 w-3" />
                 </Link>
@@ -235,7 +235,7 @@ export function Dashboard() {
 
         <div className="space-y-6">
           {/* Risk Overview */}
-          <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-5">
+          <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg p-5">
             <h2 className="text-base font-semibold text-neutral-100 mb-4">Risk Overview</h2>
             <div className="space-y-3">
               {severities.map((sev) => (
@@ -258,7 +258,7 @@ export function Dashboard() {
           </div>
 
           {/* Active Scans */}
-          <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-5">
+          <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg p-5">
             <h2 className="text-base font-semibold text-neutral-100 mb-4">Active Scans</h2>
             {!d?.active_scans || d.active_scans.length === 0 ? (
               <div className="py-6 text-center">
@@ -272,13 +272,13 @@ export function Dashboard() {
                     <div className="flex justify-between text-sm mb-1">
                       <Link
                         to={`/scans/${s.id}`}
-                        className="font-medium text-neutral-200 hover:text-sidebar-active transition-colors truncate"
+                        className="font-medium text-neutral-200 hover:text-primary transition-colors truncate"
                       >
                         {s.target_domain}
                       </Link>
                       <span className="text-neutral-500 text-xs">{Math.round(s.progress_percent)}%</span>
                     </div>
-                    <ProgressBar value={s.progress_percent} color={s.progress_percent < 50 ? 'bg-yellow-500' : undefined} />
+                    <ProgressBar value={s.progress_percent} color={s.progress_percent < 50 ? 'bg-neutral-600' : undefined} />
                     {s.current_stage && (
                       <p className="text-xs text-neutral-500 mt-1">{s.current_stage}</p>
                     )}
@@ -290,7 +290,7 @@ export function Dashboard() {
               <div className="mt-4 pt-4 border-t border-neutral-800">
                 <Link
                   to="/scans"
-                  className="text-xs text-sidebar-active font-medium hover:underline inline-flex items-center gap-1"
+                  className="text-xs text-primary font-medium hover:underline inline-flex items-center gap-1"
                 >
                   View all scans <ArrowRight className="h-3 w-3" />
                 </Link>

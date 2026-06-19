@@ -23,9 +23,9 @@ const columnHelper = createColumnHelper<Vulnerability>()
 function VulnDetailPanel({ vuln, onClose, onToggleFP }: { vuln: Vulnerability; onClose: () => void; onToggleFP: (vuln: Vulnerability) => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
-      <div className="bg-neutral-900 rounded-xl border border-neutral-800 w-full max-w-lg max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-neutral-900 rounded-lg border border-neutral-800 w-full max-w-lg max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="p-6 border-b border-neutral-800 flex items-center justify-between sticky top-0 bg-neutral-900">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <SeverityBadge severity={vuln.severity} />
             <h2 className="text-lg font-semibold text-neutral-100">{vuln.name}</h2>
           </div>
@@ -46,7 +46,7 @@ function VulnDetailPanel({ vuln, onClose, onToggleFP }: { vuln: Vulnerability; o
           </div>
           <div>
             <label className="text-xs text-neutral-500 uppercase tracking-wider">URL</label>
-            <p className="text-sm text-blue-400 truncate mt-1 font-mono">{vuln.url}</p>
+            <p className="text-sm text-primary truncate mt-1 font-mono">{vuln.url}</p>
           </div>
           {vuln.description && (
             <div>
@@ -57,7 +57,7 @@ function VulnDetailPanel({ vuln, onClose, onToggleFP }: { vuln: Vulnerability; o
           {vuln.remediation && (
             <div>
               <label className="text-xs text-neutral-500 uppercase tracking-wider">Remediation</label>
-              <p className="text-sm text-green-400 mt-1 leading-relaxed">{vuln.remediation}</p>
+              <p className="text-sm text-neutral-300 mt-1 leading-relaxed">{vuln.remediation}</p>
             </div>
           )}
           {vuln.cve_ids && vuln.cve_ids.length > 0 && (
@@ -65,7 +65,7 @@ function VulnDetailPanel({ vuln, onClose, onToggleFP }: { vuln: Vulnerability; o
               <label className="text-xs text-neutral-500 uppercase tracking-wider">CVE IDs</label>
               <div className="flex flex-wrap gap-1.5 mt-1.5">
                 {vuln.cve_ids.map((cve) => (
-                  <span key={cve} className="px-2 py-0.5 rounded text-xs bg-red-900/30 text-red-300 font-mono">{cve}</span>
+                  <span key={cve} className="px-2 py-0.5 rounded text-xs bg-neutral-800/50 text-neutral-300 font-mono">{cve}</span>
                 ))}
               </div>
             </div>
@@ -76,11 +76,11 @@ function VulnDetailPanel({ vuln, onClose, onToggleFP }: { vuln: Vulnerability; o
               <p className="text-sm text-neutral-400 mt-1 font-mono">{vuln.matched_at}</p>
             </div>
           )}
-          <div className="pt-4 border-t border-neutral-800 flex gap-3">
+          <div className="pt-4 border-t border-neutral-800 flex gap-2">
             <Button
               onClick={() => onToggleFP(vuln)}
               variant="outline"
-              className={`gap-2 ${vuln.is_false_positive ? 'border-yellow-700 text-yellow-400 hover:text-yellow-300' : 'border-neutral-700 text-neutral-300 hover:text-neutral-100'}`}
+              className={`gap-2 ${vuln.is_false_positive ? 'border-amber-700 text-neutral-300 hover:text-neutral-300' : 'border-neutral-700 text-neutral-300 hover:text-neutral-100'}`}
             >
               {vuln.is_false_positive ? <FlagOff className="h-4 w-4" /> : <Flag className="h-4 w-4" />}
               {vuln.is_false_positive ? 'Unmark False Positive' : 'Mark False Positive'}
@@ -152,7 +152,7 @@ export function FindingsPage() {
         cell: (info) => (
           <div className="flex items-center gap-2">
             {info.row.original.is_false_positive && (
-              <FlagOff className="h-3.5 w-3.5 text-yellow-500 shrink-0" />
+              <FlagOff className="h-3.5 w-3.5 text-neutral-300 shrink-0" />
             )}
             <span className={`font-medium ${info.row.original.is_false_positive ? 'text-neutral-500 line-through' : 'text-neutral-100'}`}>
               {info.getValue()}
@@ -183,7 +183,7 @@ export function FindingsPage() {
                 e.stopPropagation()
                 setSelectedVuln(row.original)
               }}
-              className="text-sm text-sidebar-active hover:text-sidebar-active/80"
+              className="text-sm text-primary hover:text-primary/80"
             >
               Details
             </button>
@@ -193,7 +193,7 @@ export function FindingsPage() {
                 const v = row.original
                 fpMutation.mutate({ vulnId: v.id, isFP: !v.is_false_positive })
               }}
-              className={`text-sm ${row.original.is_false_positive ? 'text-yellow-400 hover:text-yellow-300' : 'text-neutral-500 hover:text-neutral-300'}`}
+              className={`text-sm ${row.original.is_false_positive ? 'text-neutral-300 hover:text-neutral-300' : 'text-neutral-500 hover:text-neutral-300'}`}
               title={row.original.is_false_positive ? 'Unmark as false positive' : 'Mark as false positive'}
             >
               {row.original.is_false_positive ? 'Unmark' : 'FP'}
@@ -246,7 +246,7 @@ export function FindingsPage() {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 mb-4">
+      <div className="flex flex-col sm:flex-row gap-2 mb-4">
         <div className="flex gap-2 flex-1">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
@@ -255,12 +255,12 @@ export function FindingsPage() {
               value={inputJobId}
               onChange={(e) => setInputJobId(e.target.value)}
               placeholder="Enter scan job ID..."
-              className="w-full bg-neutral-800/50 border border-neutral-700 rounded-lg pl-10 pr-4 py-2.5 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-sidebar-active/50"
+              className="w-full bg-neutral-800/50 border border-neutral-700 rounded-lg pl-10 pr-4 py-2.5 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
           </div>
           <Button
             onClick={() => setJobId(inputJobId)}
-            className="bg-sidebar-active text-sidebar-bg hover:bg-sidebar-active/90"
+            className="bg-primary text-sidebar-bg hover:bg-primary/90/90"
           >
             Load Findings
           </Button>
@@ -284,7 +284,7 @@ export function FindingsPage() {
                     onClick={() => setSeverityFilter(sev)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                       severityFilter === sev
-                        ? 'bg-sidebar-active text-sidebar-bg'
+                        ? 'bg-primary text-sidebar-bg'
                         : 'bg-neutral-800 text-neutral-400 hover:text-neutral-200'
                     }`}
                   >
@@ -302,13 +302,13 @@ export function FindingsPage() {
                     onClick={() => setShowFP(opt)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center gap-1 ${
                       showFP === opt
-                        ? 'bg-sidebar-active text-sidebar-bg'
+                        ? 'bg-primary text-sidebar-bg'
                         : 'bg-neutral-800 text-neutral-400 hover:text-neutral-200'
                     }`}
                   >
                     {opt === 'all' ? 'All' : opt === 'real' ? 'Real' : 'FP'}
                     {opt === 'fp' && fpCount > 0 && (
-                      <span className={`${showFP === 'fp' ? 'text-sidebar-bg/70' : 'text-yellow-500'}`}>
+                      <span className={`${showFP === 'fp' ? 'text-sidebar-bg/70' : 'text-neutral-300'}`}>
                         ({fpCount})
                       </span>
                     )}
@@ -319,12 +319,12 @@ export function FindingsPage() {
           )}
 
           {isLoading ? (
-            <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl overflow-hidden">
+            <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg overflow-hidden">
               <SkeletonTable rows={6} cols={6} />
             </div>
           ) : (
             <ErrorBoundary>
-              <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl overflow-hidden">
+              <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>

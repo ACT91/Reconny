@@ -41,15 +41,15 @@ function ProjectCard({
   })
 
   return (
-    <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-5 hover:border-neutral-700 transition-colors">
+    <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg p-5 hover:border-neutral-700 transition-colors">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg bg-sidebar-active/10 flex items-center justify-center">
-            <FolderKanban className="h-4.5 w-4.5 text-sidebar-active" />
+          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+            <FolderKanban className="h-4.5 w-4.5 text-primary" />
           </div>
           <div>
             <h3
-              className="font-medium text-neutral-100 cursor-pointer hover:text-sidebar-active transition-colors"
+              className="font-medium text-neutral-100 cursor-pointer hover:text-primary transition-colors"
               onClick={() => navigate(`/projects/${project.id}`)}
             >
               {project.name}
@@ -69,7 +69,7 @@ function ProjectCard({
           </button>
           <button
             onClick={() => onDelete(project.id)}
-            className="p-1.5 rounded-lg text-neutral-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+            className="p-1.5 rounded-lg text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800/50 transition-colors"
             title="Delete"
           >
             <Trash2 className="h-3.5 w-3.5" />
@@ -92,7 +92,7 @@ function ProjectCard({
       )}
 
       {stats && (
-        <div className="grid grid-cols-3 gap-3 py-3 border-t border-neutral-800/50">
+        <div className="grid grid-cols-3 gap-2 py-3 border-t border-neutral-800/50">
           <div className="text-center">
             <p className="text-lg font-semibold text-neutral-100">{stats.total_scans}</p>
             <p className="text-[11px] text-neutral-500">Scans</p>
@@ -118,11 +118,11 @@ function ProjectCard({
                 <span
                   className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
                     scan.status === 'completed'
-                      ? 'bg-green-900/30 text-green-400'
+                      ? 'bg-neutral-600/10 text-neutral-300'
                       : scan.status === 'running'
-                      ? 'bg-blue-900/30 text-blue-400'
+                      ? 'bg-primary/10 text-primary'
                       : scan.status === 'failed'
-                      ? 'bg-red-900/30 text-red-400'
+                      ? 'bg-neutral-800/50 text-neutral-300'
                       : 'bg-neutral-800 text-neutral-400'
                   }`}
                 >
@@ -173,7 +173,7 @@ function ProjectForm({
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full bg-neutral-800/50 border border-neutral-700 rounded-lg px-4 py-2.5 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-sidebar-active/50"
+          className="w-full bg-neutral-800/50 border border-neutral-700 rounded-lg px-4 py-2.5 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary/50"
           placeholder="My Project"
           required
         />
@@ -183,7 +183,7 @@ function ProjectForm({
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full bg-neutral-800/50 border border-neutral-700 rounded-lg px-4 py-2.5 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-sidebar-active/50 min-h-[80px] resize-none"
+          className="w-full bg-neutral-800/50 border border-neutral-700 rounded-lg px-4 py-2.5 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary/50 min-h-[80px] resize-none"
           placeholder="Optional description..."
           rows={3}
         />
@@ -193,7 +193,7 @@ function ProjectForm({
         <textarea
           value={domains}
           onChange={(e) => setDomains(e.target.value)}
-          className="w-full bg-neutral-800/50 border border-neutral-700 rounded-lg px-4 py-2.5 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-sidebar-active/50 font-mono text-sm min-h-[100px]"
+          className="w-full bg-neutral-800/50 border border-neutral-700 rounded-lg px-4 py-2.5 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary/50 font-mono text-sm min-h-[100px]"
           placeholder="example.com&#10;sub.example.com"
           rows={4}
         />
@@ -205,7 +205,7 @@ function ProjectForm({
         <Button
           type="submit"
           disabled={isPending || !name.trim()}
-          className="bg-sidebar-active text-sidebar-bg hover:bg-sidebar-active/90"
+          className="bg-primary text-sidebar-bg hover:bg-primary/90/90"
         >
           {isPending ? 'Saving...' : project ? 'Update Project' : 'Create Project'}
         </Button>
@@ -270,7 +270,7 @@ export function ProjectsPage() {
         </div>
         <Dialog open={showCreate} onOpenChange={setShowCreate}>
           <DialogTrigger asChild>
-            <Button className="bg-sidebar-active text-sidebar-bg hover:bg-sidebar-active/90 gap-2">
+            <Button className="bg-primary text-sidebar-bg hover:bg-primary/90/90 gap-2">
               <Plus className="h-4 w-4" />
               New Project
             </Button>
@@ -301,7 +301,7 @@ export function ProjectsPage() {
             <p className="text-sm text-neutral-600 mt-1">Create your first project to start organizing scans</p>
             <Button
               onClick={() => setShowCreate(true)}
-              className="mt-4 bg-sidebar-active text-sidebar-bg hover:bg-sidebar-active/90 gap-2"
+              className="mt-4 bg-primary text-sidebar-bg hover:bg-primary/90/90 gap-2"
             >
               <Plus className="h-4 w-4" />
               Create Project

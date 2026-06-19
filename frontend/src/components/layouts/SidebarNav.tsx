@@ -14,6 +14,8 @@ import {
   ChevronRight,
   HelpCircle,
   LogOut,
+  Moon,
+  Sun,
 } from 'lucide-react'
 import { SidebarSection } from './SidebarSection'
 import { useLogout } from '@/hooks/useAuth'
@@ -33,8 +35,16 @@ function SidebarNavContent({ isCollapsed }: SidebarNavProps) {
   const location = useLocation()
   const [searchParams] = useSearchParams()
   const [expandedItem, setExpandedItem] = useState<string | null>(null)
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'))
   const pathname = location.pathname
   const activeTab = searchParams.get('tab')
+
+  const toggleTheme = () => {
+    const newDark = !isDark
+    setIsDark(newDark)
+    document.documentElement.classList.toggle('dark', newDark)
+    localStorage.setItem('theme', newDark ? 'dark' : 'light')
+  }
 
   const navItems: NavItem[] = [
     {
@@ -120,7 +130,7 @@ function SidebarNavContent({ isCollapsed }: SidebarNavProps) {
   }
 
   return (
-    <div className="flex flex-1 flex-col overflow-hidden font-['Hanken_Grotesk']">
+    <div className="flex flex-1 flex-col overflow-hidden font-sans">
       <nav className="flex-1 overflow-y-auto">
         <SidebarSection title="Navigation" isCollapsed={isCollapsed}>
           <ul className="flex list-none flex-col gap-0 pl-0">
@@ -135,15 +145,15 @@ function SidebarNavContent({ isCollapsed }: SidebarNavProps) {
                   <div className="flex items-center">
                     <Link
                       to={item.href}
-                      className={`mx-2 my-0.5 flex flex-1 items-center gap-3 rounded-xl px-4 py-2.5 text-[13px] transition-colors duration-200 ${
+                      className={`mx-2 my-0.5 flex flex-1 items-center gap-2 rounded-lg px-4 py-2.5 text-[13px] transition-colors duration-200 ${
                         active && !isCollapsed
-                          ? 'bg-sidebar-active/10 text-sidebar-active font-medium'
-                          : 'text-neutral-400 hover:bg-sidebar-hover hover:text-neutral-200'
+                          ? 'text-neutral-100 font-medium'
+                          : 'text-neutral-400 hover:text-neutral-200'
                       } ${isCollapsed ? 'justify-center' : 'justify-start'}`}
                     >
                       <Icon
                         className={`h-[18px] w-[18px] flex-shrink-0 ${
-                          active ? 'text-sidebar-active' : 'text-neutral-500'
+                          active ? 'text-neutral-100' : 'text-neutral-500'
                         }`}
                       />
                       <span
@@ -159,7 +169,7 @@ function SidebarNavContent({ isCollapsed }: SidebarNavProps) {
                     {hasSubItems && !isCollapsed && (
                       <button
                         onClick={() => toggleExpand(item.href)}
-                        className="mr-3 p-1 text-neutral-500 hover:text-neutral-300 transition-colors rounded-md hover:bg-sidebar-hover"
+                        className="mr-3 p-1 text-neutral-500 hover:text-neutral-300 transition-colors rounded-md"
                         aria-label={isExpanded ? 'Collapse' : 'Expand'}
                       >
                         {isExpanded ? (
@@ -179,7 +189,7 @@ function SidebarNavContent({ isCollapsed }: SidebarNavProps) {
                           to={subItem.href}
                           className={`flex items-center pr-4 py-2.5 mx-3 text-[13px] rounded-lg transition-colors duration-200 ${
                             isSubItemActive(item.href, subItem.href)
-                              ? 'text-sidebar-active font-medium'
+                              ? 'text-neutral-100 font-medium'
                               : 'text-neutral-400 hover:text-neutral-200'
                           }`}
                         >
@@ -197,16 +207,23 @@ function SidebarNavContent({ isCollapsed }: SidebarNavProps) {
 
       {!isCollapsed && (
         <div className="px-4 py-4 space-y-0.5 shrink-0 border-t border-neutral-800 mt-2">
+          <button
+            onClick={toggleTheme}
+            className="flex items-center gap-2 w-full px-3 py-2.5 text-neutral-400 hover:text-neutral-200 rounded-lg transition-colors text-[13px]"
+          >
+            {isDark ? <Moon className="h-[18px] w-[18px] text-neutral-500" /> : <Sun className="h-[18px] w-[18px] text-neutral-500" />}
+            <span className="font-medium">{isDark ? 'Dark Mode' : 'Light Mode'}</span>
+          </button>
           <Link
             to="/settings"
-            className="flex items-center gap-3 px-3 py-2.5 text-neutral-400 hover:text-neutral-200 hover:bg-sidebar-hover rounded-xl transition-colors text-[13px]"
+            className="flex items-center gap-2 px-3 py-2.5 text-neutral-400 hover:text-neutral-200 rounded-lg transition-colors text-[13px]"
           >
             <HelpCircle className="h-[18px] w-[18px] text-neutral-500" />
             <span className="font-medium">Help & Information</span>
           </Link>
           <button
             onClick={logout}
-            className="flex items-center gap-3 w-full px-3 py-2.5 text-neutral-400 hover:text-neutral-200 hover:bg-sidebar-hover rounded-xl transition-colors text-[13px]"
+            className="flex items-center gap-2 w-full px-3 py-2.5 text-neutral-400 hover:text-neutral-200 rounded-lg transition-colors text-[13px]"
           >
             <LogOut className="h-[18px] w-[18px] text-neutral-500" />
             <span className="font-medium">Log out</span>
@@ -215,16 +232,23 @@ function SidebarNavContent({ isCollapsed }: SidebarNavProps) {
       )}
       {isCollapsed && (
         <div className="px-2 py-4 space-y-0.5 shrink-0 border-t border-neutral-800 mt-2 flex flex-col items-center">
+          <button
+            onClick={toggleTheme}
+            className="p-2.5 text-neutral-500 hover:text-neutral-200 rounded-lg transition-colors"
+            aria-label={isDark ? 'Dark mode' : 'Light mode'}
+          >
+            {isDark ? <Moon className="h-[18px] w-[18px]" /> : <Sun className="h-[18px] w-[18px]" />}
+          </button>
           <Link
             to="/settings"
-            className="p-2.5 text-neutral-500 hover:text-neutral-200 hover:bg-sidebar-hover rounded-xl transition-colors"
+            className="p-2.5 text-neutral-500 hover:text-neutral-200 rounded-lg transition-colors"
             aria-label="Help"
           >
             <HelpCircle className="h-[18px] w-[18px]" />
           </Link>
           <button
             onClick={logout}
-            className="p-2.5 text-neutral-500 hover:text-neutral-200 hover:bg-sidebar-hover rounded-xl transition-colors"
+            className="p-2.5 text-neutral-500 hover:text-neutral-200 rounded-lg transition-colors"
             aria-label="Log out"
           >
             <LogOut className="h-[18px] w-[18px]" />

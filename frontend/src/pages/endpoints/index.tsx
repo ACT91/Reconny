@@ -21,12 +21,12 @@ import toast from 'react-hot-toast'
 const columnHelper = createColumnHelper<Endpoint>()
 
 const METHOD_COLORS: Record<string, string> = {
-  GET: 'bg-green-900/30 text-green-400',
-  POST: 'bg-blue-900/30 text-blue-400',
-  PUT: 'bg-yellow-900/30 text-yellow-400',
-  PATCH: 'bg-orange-900/30 text-orange-400',
-  DELETE: 'bg-red-900/30 text-red-400',
-  OPTIONS: 'bg-purple-900/30 text-purple-400',
+  GET: 'bg-neutral-600/10 text-neutral-300',
+  POST: 'bg-primary/10 text-primary',
+  PUT: 'bg-neutral-600/10 text-neutral-300',
+  PATCH: 'bg-neutral-600/10 text-neutral-300',
+  DELETE: 'bg-neutral-800/50 text-neutral-300',
+  OPTIONS: 'bg-purple-900/30 text-neutral-300',
   HEAD: 'bg-neutral-700 text-neutral-300',
 }
 
@@ -47,7 +47,7 @@ function SourceFilter({
           onClick={() => onChange(src)}
           className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
             value === src
-              ? 'bg-sidebar-active text-sidebar-bg'
+              ? 'bg-primary text-sidebar-bg'
               : 'bg-neutral-800 text-neutral-400 hover:text-neutral-200'
           }`}
         >
@@ -128,12 +128,12 @@ export function EndpointsPage() {
           const code = info.getValue()
           const color = code
             ? code < 300
-              ? 'text-green-400'
+              ? 'text-neutral-300'
               : code < 400
-              ? 'text-yellow-400'
+              ? 'text-neutral-300'
               : code < 500
-              ? 'text-orange-400'
-              : 'text-red-400'
+              ? 'text-neutral-300'
+              : 'text-neutral-300'
             : 'text-neutral-600'
           return <span className={`text-sm font-mono ${color}`}>{code || '—'}</span>
         },
@@ -246,7 +246,7 @@ export function EndpointsPage() {
         )}
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 mb-4">
+      <div className="flex flex-col sm:flex-row gap-2 mb-4">
         <div className="flex gap-2 flex-1">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
@@ -255,12 +255,12 @@ export function EndpointsPage() {
               value={inputJobId}
               onChange={(e) => setInputJobId(e.target.value)}
               placeholder="Enter scan job ID..."
-              className="w-full bg-neutral-800/50 border border-neutral-700 rounded-lg pl-10 pr-4 py-2.5 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-sidebar-active/50"
+              className="w-full bg-neutral-800/50 border border-neutral-700 rounded-lg pl-10 pr-4 py-2.5 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
           </div>
           <Button
             onClick={() => setJobId(inputJobId)}
-            className="bg-sidebar-active text-sidebar-bg hover:bg-sidebar-active/90"
+            className="bg-primary text-sidebar-bg hover:bg-primary/90/90"
           >
             Load Endpoints
           </Button>
@@ -276,7 +276,7 @@ export function EndpointsPage() {
       ) : (
         <ErrorBoundary>
           {isLoading ? (
-            <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl overflow-hidden">
+            <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg overflow-hidden">
               <SkeletonTable rows={8} cols={7} />
             </div>
           ) : error ? (
@@ -286,7 +286,7 @@ export function EndpointsPage() {
             </div>
           ) : (
             <>
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center gap-2 mb-4">
                 <Filter className="h-4 w-4 text-neutral-500" />
                 <SourceFilter value={sourceFilter} onChange={setSourceFilter} />
                 <div className="flex-1" />
@@ -295,11 +295,11 @@ export function EndpointsPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search endpoints..."
-                  className="bg-neutral-800/50 border border-neutral-700 rounded-lg px-3 py-1.5 text-sm text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-sidebar-active/50 w-48"
+                  className="bg-neutral-800/50 border border-neutral-700 rounded-lg px-3 py-1.5 text-sm text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary/50 w-48"
                 />
               </div>
 
-              <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl overflow-hidden">
+              <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>

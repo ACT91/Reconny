@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Key, Plus, Trash2, Copy, Check, Eye, EyeOff, Moon, Sun } from 'lucide-react'
+import { Key, Plus, Trash2, Copy, Check, Eye, EyeOff, User, Lock, KeyRound } from 'lucide-react'
 import toast from 'react-hot-toast'
 import type { APIKeyFull } from '@/types'
 
@@ -161,7 +161,7 @@ function ChangePasswordSection() {
           <Button
             type="submit"
             disabled={changePassword.isPending}
-            className="bg-sidebar-active text-sidebar-bg hover:bg-sidebar-active/90"
+            className="bg-primary text-sidebar-bg hover:bg-primary/90/90"
           >
             {changePassword.isPending ? 'Updating...' : 'Change Password'}
           </Button>
@@ -180,7 +180,7 @@ function ApiKeyItem({
 }) {
   return (
     <div className="flex items-center justify-between p-3 rounded-lg bg-neutral-800/30 border border-neutral-800">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <Key className="h-4 w-4 text-neutral-500" />
         <div>
           <p className="text-sm text-neutral-200 font-medium">{keyItem.name}</p>
@@ -191,7 +191,7 @@ function ApiKeyItem({
       </div>
       <button
         onClick={() => onRevoke(keyItem.id)}
-        className="p-1.5 rounded-lg text-neutral-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+        className="p-1.5 rounded-lg text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800/50 transition-colors"
         title="Revoke key"
       >
         <Trash2 className="h-4 w-4" />
@@ -258,7 +258,7 @@ function ApiKeysSection() {
           }}
         >
           <DialogTrigger asChild>
-            <Button className="bg-sidebar-active text-sidebar-bg hover:bg-sidebar-active/90 gap-2">
+            <Button className="bg-primary text-sidebar-bg hover:bg-primary/90/90 gap-2">
               <Plus className="h-4 w-4" />
               Create Key
             </Button>
@@ -278,13 +278,13 @@ function ApiKeysSection() {
             {newKeyResult ? (
               <div className="space-y-4">
                 <div className="p-3 rounded-lg bg-neutral-800 border border-neutral-700">
-                  <code className="text-sm text-sidebar-active break-all select-all">
+                  <code className="text-sm text-primary break-all select-all">
                     {newKeyResult.key}
                   </code>
                 </div>
                 <Button
                   onClick={copyKey}
-                  className="w-full gap-2 bg-sidebar-active text-sidebar-bg hover:bg-sidebar-active/90"
+                  className="w-full gap-2 bg-primary text-sidebar-bg hover:bg-primary/90/90"
                 >
                   {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                   {copied ? 'Copied!' : 'Copy Key'}
@@ -317,7 +317,7 @@ function ApiKeysSection() {
                   <Button
                     onClick={handleCreate}
                     disabled={create.isPending || !keyName.trim()}
-                    className="bg-sidebar-active text-sidebar-bg hover:bg-sidebar-active/90"
+                    className="bg-primary text-sidebar-bg hover:bg-primary/90/90"
                   >
                     {create.isPending ? 'Creating...' : 'Create'}
                   </Button>
@@ -354,62 +354,44 @@ function ApiKeysSection() {
   )
 }
 
-function ThemeSection() {
-  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'))
-
-  const toggleTheme = () => {
-    const newDark = !isDark
-    setIsDark(newDark)
-    document.documentElement.classList.toggle('dark', newDark)
-    localStorage.setItem('theme', newDark ? 'dark' : 'light')
-  }
-
-  return (
-    <Card className="bg-neutral-900/50 border-neutral-800">
-      <CardHeader>
-        <CardTitle className="text-neutral-100">Appearance</CardTitle>
-        <CardDescription className="text-neutral-400">Toggle between light and dark mode</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {isDark ? (
-              <Moon className="h-5 w-5 text-neutral-400" />
-            ) : (
-              <Sun className="h-5 w-5 text-neutral-400" />
-            )}
-            <span className="text-sm text-neutral-300">{isDark ? 'Dark Mode' : 'Light Mode'}</span>
-          </div>
-          <button
-            onClick={toggleTheme}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              isDark ? 'bg-sidebar-active' : 'bg-neutral-700'
-            }`}
-          >
-            <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                isDark ? 'translate-x-6' : 'translate-x-1'
-              }`}
-            />
-          </button>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
 export function SettingsPage() {
+  const tabs = [
+    { id: 'profile', label: 'Profile', icon: User },
+    { id: 'password', label: 'Change Password', icon: Lock },
+    { id: 'api-keys', label: 'API Keys', icon: KeyRound },
+  ]
+  const [activeTab, setActiveTab] = useState('profile')
+
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      <div>
+    <div className="max-w-3xl mx-auto">
+      <div className="mb-6">
         <h1 className="text-2xl font-semibold text-neutral-100">Settings</h1>
         <p className="text-sm text-neutral-400 mt-1">Manage your account and API keys</p>
       </div>
 
-      <ProfileSection />
-      <ChangePasswordSection />
-      <ApiKeysSection />
-      <ThemeSection />
+      <div className="flex gap-1 mb-6 border-b border-neutral-800">
+        {tabs.map((tab) => {
+          const Icon = tab.icon
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
+                activeTab === tab.id
+                  ? 'text-neutral-50 border-neutral-50'
+                  : 'text-neutral-400 border-transparent hover:text-neutral-200'
+              }`}
+            >
+              <Icon className="h-4 w-4" />
+              {tab.label}
+            </button>
+          )
+        })}
+      </div>
+
+      {activeTab === 'profile' && <ProfileSection />}
+      {activeTab === 'password' && <ChangePasswordSection />}
+      {activeTab === 'api-keys' && <ApiKeysSection />}
     </div>
   )
 }

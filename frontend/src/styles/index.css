@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -14,18 +14,29 @@
     --popover-foreground: 0 0% 3.9%;
     --primary: 0 0% 10%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 95.9%;
+    --secondary: 0 0% 96%;
     --secondary-foreground: 0 0% 10%;
-    --muted: 0 0% 95.9%;
-    --muted-foreground: 0 0% 46.1%;
-    --accent: 0 0% 95.9%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 46%;
+    --accent: 0 0% 96%;
     --accent-foreground: 0 0% 10%;
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 90%;
     --input: 0 0% 90%;
     --ring: 0 0% 10%;
-    --radius: 0.75rem;
+    --radius: 0.5rem;
+    --neutral-50: 0 0% 4%;
+    --neutral-100: 0 0% 8%;
+    --neutral-200: 0 0% 15%;
+    --neutral-300: 0 0% 25%;
+    --neutral-400: 0 0% 40%;
+    --neutral-500: 0 0% 55%;
+    --neutral-600: 0 0% 70%;
+    --neutral-700: 0 0% 82%;
+    --neutral-800: 0 0% 90%;
+    --neutral-900: 0 0% 96%;
+    --neutral-950: 0 0% 99%;
   }
 
   .dark {
@@ -35,19 +46,30 @@
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 47 95% 60%;
+    --primary: 0 0% 98%;
     --primary-foreground: 0 0% 10%;
-    --secondary: 0 0% 15.9%;
+    --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 15.9%;
-    --muted-foreground: 0 0% 64.9%;
-    --accent: 0 0% 15.9%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 64%;
+    --accent: 0 0% 15%;
     --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 63% 31%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 15.9%;
-    --input: 0 0% 15.9%;
-    --ring: 47 95% 60%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 0 0% 98%;
+    --neutral-50: 0 0% 98%;
+    --neutral-100: 0 0% 95%;
+    --neutral-200: 0 0% 88%;
+    --neutral-300: 0 0% 80%;
+    --neutral-400: 0 0% 64%;
+    --neutral-500: 0 0% 45%;
+    --neutral-600: 0 0% 32%;
+    --neutral-700: 0 0% 25%;
+    --neutral-800: 0 0% 16%;
+    --neutral-900: 0 0% 10%;
+    --neutral-950: 0 0% 4%;
   }
 
   body {
@@ -61,57 +83,57 @@
 
 @layer components {
   .card-gradient {
-    @apply bg-gradient-to-br from-[#F8F5F0] via-[#FDFBFA] to-[#FAF0D9] bg-fixed;
+    @apply bg-gradient-to-br from-neutral-900 via-neutral-950 to-neutral-900 bg-fixed;
   }
 
   .card {
-    @apply bg-white rounded-4xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300;
+    @apply bg-neutral-900 rounded-lg p-6 shadow-sm border border-neutral-800 transition-all duration-200;
   }
 
   .card-dark {
-    @apply bg-brand-dark text-white rounded-4xl p-8 shadow-xl;
+    @apply bg-neutral-100 text-neutral-50 rounded-lg p-6 shadow-sm border border-neutral-200;
   }
 
   .btn-primary {
-    @apply px-6 py-3 rounded-full bg-brand-dark text-white font-medium hover:bg-brand-dark/90 transition-colors;
+    @apply px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors;
   }
 
   .btn-secondary {
-    @apply px-6 py-3 rounded-full bg-brand-yellow text-brand-dark font-medium hover:bg-brand-yellow/90 transition-colors;
+    @apply px-4 py-2 rounded-lg bg-secondary text-secondary-foreground font-medium hover:bg-secondary/80 transition-colors;
   }
 
   .input-field {
-    @apply w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white focus:border-brand-dark focus:ring-2 focus:ring-brand-yellow/20 outline-none transition-all;
+    @apply w-full px-3 py-2 rounded-lg border border-neutral-800 bg-neutral-950 text-neutral-50 placeholder:text-neutral-400 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all;
   }
 
   .badge {
-    @apply px-3 py-1 rounded-full text-xs font-semibold;
+    @apply px-2.5 py-1 rounded-md text-xs font-semibold;
   }
 
   .badge-active {
-    @apply badge bg-brand-yellow text-brand-dark;
+    @apply badge bg-primary text-primary-foreground;
   }
 
   .badge-inactive {
-    @apply badge bg-gray-100 text-gray-600;
+    @apply badge bg-neutral-800 text-neutral-400;
   }
 
   .nav-link {
-    @apply px-6 py-2.5 rounded-full text-sm font-medium transition-colors;
+    @apply px-4 py-2 rounded-lg text-sm font-medium transition-colors;
   }
 
   .nav-link-active {
-    @apply nav-link bg-brand-dark text-white;
+    @apply nav-link bg-primary text-primary-foreground;
   }
 
   .nav-link-inactive {
-    @apply nav-link text-brand-muted hover:text-brand-text;
+    @apply nav-link text-neutral-400 hover:text-neutral-50 hover:bg-neutral-900;
   }
 }
 
 @layer utilities {
   .glass {
-    @apply bg-white/60 backdrop-blur-md border border-white/40;
+    @apply bg-neutral-900/60 backdrop-blur-md border border-neutral-800/40;
   }
 
   .text-balance {

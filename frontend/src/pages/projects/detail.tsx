@@ -10,10 +10,10 @@ import type { ScanJob } from '@/types'
 
 function SeverityBadge({ severity }: { severity: string }) {
   const colors: Record<string, string> = {
-    critical: 'bg-red-900/30 text-red-400',
-    high: 'bg-orange-900/30 text-orange-400',
-    medium: 'bg-yellow-900/30 text-yellow-400',
-    low: 'bg-blue-900/30 text-blue-400',
+    critical: 'bg-neutral-800/50 text-neutral-300',
+    high: 'bg-neutral-600/10 text-neutral-300',
+    medium: 'bg-neutral-600/10 text-neutral-300',
+    low: 'bg-primary/10 text-primary',
     info: 'bg-neutral-800 text-neutral-400',
   }
   return (
@@ -61,12 +61,12 @@ function NewScanModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={onClose}>
       <div
-        className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 w-full max-w-md mx-4"
+        className="bg-neutral-900 rounded-lg border border-neutral-800 p-6 w-full max-w-md mx-4"
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-lg font-semibold text-neutral-100 mb-4">New Scan for Project</h2>
         {error && (
-          <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-800 text-red-300 text-sm">{error}</div>
+          <div className="mb-4 p-3 rounded-lg bg-neutral-800/50 border border-neutral-700 text-neutral-300 text-sm">{error}</div>
         )}
         <div className="mb-4">
           <label className="block text-sm font-medium text-neutral-400 mb-2">Target Domain</label>
@@ -74,12 +74,12 @@ function NewScanModal({
             type="text"
             value={targetDomain}
             onChange={(e) => setTargetDomain(e.target.value)}
-            className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-2.5 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-sidebar-active/50"
+            className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-2.5 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary/50"
             placeholder="example.com"
             required
           />
         </div>
-        <div className="flex gap-3 justify-end">
+        <div className="flex gap-2 justify-end">
           <button
             type="button"
             onClick={onClose}
@@ -90,7 +90,7 @@ function NewScanModal({
           <Button
             onClick={handleStart}
             disabled={isStarting || !targetDomain.trim()}
-            className="bg-sidebar-active text-sidebar-bg hover:bg-sidebar-active/90 gap-2"
+            className="bg-primary text-sidebar-bg hover:bg-primary/90/90 gap-2"
           >
             <Play className="h-4 w-4" />
             {isStarting ? 'Starting...' : 'Start Scan'}
@@ -156,7 +156,7 @@ export function ProjectDetailPage() {
       </div>
 
       <div className="flex items-start justify-between mb-6">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => navigate('/projects')}
             className="p-2 rounded-lg text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800 transition-colors"
@@ -172,7 +172,7 @@ export function ProjectDetailPage() {
         </div>
         <Button
           onClick={() => setShowNewScan(true)}
-          className="bg-sidebar-active text-sidebar-bg hover:bg-sidebar-active/90 gap-2"
+          className="bg-primary text-sidebar-bg hover:bg-primary/90/90 gap-2"
         >
           <Play className="h-4 w-4" />
           New Scan
@@ -195,29 +195,29 @@ export function ProjectDetailPage() {
 
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-4">
+          <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg p-4">
             <p className="text-2xl font-semibold text-neutral-100">{stats.total_scans}</p>
             <p className="text-xs text-neutral-500 mt-1">Total Scans</p>
             <div className="flex gap-2 mt-2 text-[11px]">
-              <span className="text-green-400">{stats.completed_scans} done</span>
-              <span className="text-red-400">{stats.failed_scans} failed</span>
+              <span className="text-neutral-300">{stats.completed_scans} done</span>
+              <span className="text-neutral-300">{stats.failed_scans} failed</span>
             </div>
           </div>
-          <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-4">
+          <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg p-4">
             <p className="text-2xl font-semibold text-neutral-100">{stats.total_subdomains}</p>
             <p className="text-xs text-neutral-500 mt-1">
               <Globe className="h-3 w-3 inline mr-1" />
               Subdomains
             </p>
           </div>
-          <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-4">
+          <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg p-4">
             <p className="text-2xl font-semibold text-neutral-100">{stats.total_endpoints}</p>
             <p className="text-xs text-neutral-500 mt-1">
               <Network className="h-3 w-3 inline mr-1" />
               Endpoints
             </p>
           </div>
-          <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-4">
+          <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg p-4">
             <p className="text-2xl font-semibold text-neutral-100">{stats.total_vulnerabilities}</p>
             <p className="text-xs text-neutral-500 mt-1">
               <AlertTriangle className="h-3 w-3 inline mr-1" />
@@ -244,20 +244,20 @@ export function ProjectDetailPage() {
         {scansLoading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-5 animate-pulse">
+              <div key={i} className="bg-neutral-900/50 border border-neutral-800 rounded-lg p-5 animate-pulse">
                 <div className="h-5 bg-neutral-800 rounded w-1/3 mb-2" />
                 <div className="h-3 bg-neutral-800 rounded w-1/4" />
               </div>
             ))}
           </div>
         ) : scans.length === 0 ? (
-          <div className="text-center py-16 bg-neutral-900/30 border border-neutral-800/50 rounded-xl">
+          <div className="text-center py-16 bg-neutral-900/30 border border-neutral-800/50 rounded-lg">
             <Play className="h-10 w-10 text-neutral-700 mx-auto mb-3" />
             <p className="text-neutral-400">No scans yet</p>
             <p className="text-sm text-neutral-600 mt-1">Start a scan for this project</p>
             <Button
               onClick={() => setShowNewScan(true)}
-              className="mt-4 bg-sidebar-active text-sidebar-bg hover:bg-sidebar-active/90 gap-2"
+              className="mt-4 bg-primary text-sidebar-bg hover:bg-primary/90/90 gap-2"
             >
               <Play className="h-4 w-4" />
               Start Scan
@@ -268,7 +268,7 @@ export function ProjectDetailPage() {
             {scans.map((scan: ScanJob) => (
               <div
                 key={scan.id}
-                className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-4 hover:border-neutral-700 transition-colors cursor-pointer"
+                className="bg-neutral-900/50 border border-neutral-800 rounded-lg p-4 hover:border-neutral-700 transition-colors cursor-pointer"
                 onClick={() => navigate(`/scans/${scan.id}`)}
               >
                 <div className="flex items-center justify-between mb-2">
