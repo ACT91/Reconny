@@ -12,13 +12,9 @@ import {
   Gear,
   CaretDown,
   CaretRight,
-  Question,
-  SignOut,
-  Moon,
-  Sun,
 } from '@phosphor-icons/react'
 import { SidebarSection } from './SidebarSection'
-import { useLogout } from '@/hooks/useAuth'
+import { DropdownMenuAvatar } from '@/components/common/DropdownMenuAvatar'
 
 type SidebarNavProps = {
   isCollapsed: boolean
@@ -35,16 +31,8 @@ function SidebarNavContent({ isCollapsed }: SidebarNavProps) {
   const location = useLocation()
   const [searchParams] = useSearchParams()
   const [expandedItem, setExpandedItem] = useState<string | null>(null)
-  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'))
   const pathname = location.pathname
   const activeTab = searchParams.get('tab')
-
-  const toggleTheme = () => {
-    const newDark = !isDark
-    setIsDark(newDark)
-    document.documentElement.classList.toggle('dark', newDark)
-    localStorage.setItem('theme', newDark ? 'dark' : 'light')
-  }
 
   const navItems: NavItem[] = [
     {
@@ -102,8 +90,6 @@ function SidebarNavContent({ isCollapsed }: SidebarNavProps) {
     },
   ]
 
-  const logout = useLogout()
-
   const toggleExpand = (href: string) => {
     setExpandedItem(expandedItem === href ? null : href)
   }
@@ -132,7 +118,7 @@ function SidebarNavContent({ isCollapsed }: SidebarNavProps) {
   return (
     <div className="flex flex-1 flex-col overflow-hidden font-sans">
       <nav className="flex-1 overflow-y-auto">
-        <SidebarSection title="Navigation" isCollapsed={isCollapsed}>
+        <SidebarSection title="" isCollapsed={isCollapsed}>
           <ul className="flex list-none flex-col gap-0 pl-0">
             {navItems.map((item) => {
               const Icon = item.icon
@@ -145,6 +131,7 @@ function SidebarNavContent({ isCollapsed }: SidebarNavProps) {
                   <div className="flex items-center">
                     <Link
                       to={item.href}
+                      title={isCollapsed ? item.label : undefined}
                       className={`mx-2 my-0.5 flex flex-1 items-center gap-2 rounded-lg px-4 py-2.5 text-[13px] transition-colors duration-200 ${
                         active && !isCollapsed
                           ? 'text-neutral-100 font-medium'
@@ -205,56 +192,9 @@ function SidebarNavContent({ isCollapsed }: SidebarNavProps) {
         </SidebarSection>
       </nav>
 
-      {!isCollapsed && (
-        <div className="px-4 py-4 space-y-0.5 shrink-0 border-t border-neutral-800 mt-2">
-          <button
-            onClick={toggleTheme}
-            className="flex items-center gap-2 w-full px-3 py-2.5 text-neutral-400 hover:text-neutral-200 rounded-lg transition-colors text-[13px]"
-          >
-            {isDark ? <Moon className="h-[18px] w-[18px] text-neutral-500" /> : <Sun className="h-[18px] w-[18px] text-neutral-500" />}
-            <span className="font-medium">{isDark ? 'Dark Mode' : 'Light Mode'}</span>
-          </button>
-          <Link
-            to="/settings"
-            className="flex items-center gap-2 px-3 py-2.5 text-neutral-400 hover:text-neutral-200 rounded-lg transition-colors text-[13px]"
-          >
-            <Question className="h-[18px] w-[18px] text-neutral-500" />
-            <span className="font-medium">Help & Information</span>
-          </Link>
-          <button
-            onClick={logout}
-            className="flex items-center gap-2 w-full px-3 py-2.5 text-neutral-400 hover:text-neutral-200 rounded-lg transition-colors text-[13px]"
-          >
-            <SignOut className="h-[18px] w-[18px] text-neutral-500" />
-            <span className="font-medium">Log out</span>
-          </button>
-        </div>
-      )}
-      {isCollapsed && (
-        <div className="px-2 py-4 space-y-0.5 shrink-0 border-t border-neutral-800 mt-2 flex flex-col items-center">
-          <button
-            onClick={toggleTheme}
-            className="p-2.5 text-neutral-500 hover:text-neutral-200 rounded-lg transition-colors"
-            aria-label={isDark ? 'Dark mode' : 'Light mode'}
-          >
-            {isDark ? <Moon className="h-[18px] w-[18px]" /> : <Sun className="h-[18px] w-[18px]" />}
-          </button>
-          <Link
-            to="/settings"
-            className="p-2.5 text-neutral-500 hover:text-neutral-200 rounded-lg transition-colors"
-            aria-label="Help"
-          >
-            <Question className="h-[18px] w-[18px]" />
-          </Link>
-          <button
-            onClick={logout}
-            className="p-2.5 text-neutral-500 hover:text-neutral-200 rounded-lg transition-colors"
-            aria-label="Log out"
-          >
-            <SignOut className="h-[18px] w-[18px]" />
-          </button>
-        </div>
-      )}
+      <div className="px-2 py-3 mt-auto shrink-0 border-t border-neutral-800">
+        <DropdownMenuAvatar isCollapsed={isCollapsed} />
+      </div>
     </div>
   )
 }

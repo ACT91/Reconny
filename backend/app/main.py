@@ -34,6 +34,11 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     from app.core.database import init_db
     await init_db()
     
+    if settings.ENVIRONMENT == "production" and settings.SECRET_KEY == "super-secret-key-change-in-production":
+        logger.critical("application_startup_failed", reason="SECRET_KEY is using the insecure default value in production. You must set a strong SECRET_KEY in your .env file.")
+        import sys
+        sys.exit(1)
+        
     from app.tasks.celery_app import celery_app
     logger.info("celery_connected", broker=settings.CELERY_BROKER_URL)
     

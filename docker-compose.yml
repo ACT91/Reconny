@@ -1,7 +1,7 @@
 version: '3.8'
 
 x-shared-environment: &shared-environment
-  DATABASE_URL: postgresql://reconny:reconny123@postgres:5432/reconny
+  DATABASE_URL: postgresql://${POSTGRES_USER:-reconny}:${POSTGRES_PASSWORD:-reconny123}@postgres:5432/${POSTGRES_DB:-reconny}
   REDIS_URL: redis://redis:6379/0
   CELERY_BROKER_URL: redis://redis:6379/1
   CELERY_RESULT_BACKEND: redis://redis:6379/2
@@ -25,9 +25,9 @@ services:
     image: postgres:15-alpine
     container_name: reconny-postgres
     environment:
-      POSTGRES_USER: reconny
-      POSTGRES_PASSWORD: reconny123
-      POSTGRES_DB: reconny
+      POSTGRES_USER: ${POSTGRES_USER:-reconny}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-reconny123}
+      POSTGRES_DB: ${POSTGRES_DB:-reconny}
     ports:
       - "5432:5432"
     volumes:
@@ -146,6 +146,7 @@ services:
       CELERY_BROKER_URL: redis://redis:6379/1
       CELERY_RESULT_BACKEND: redis://redis:6379/2
       FLOWER_PORT: 5555
+      FLOWER_BASIC_AUTH: ${FLOWER_USER:-admin}:${FLOWER_PASSWORD:-admin123}
     ports:
       - "5555:5555"
     depends_on:

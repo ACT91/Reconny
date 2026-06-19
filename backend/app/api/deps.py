@@ -150,6 +150,29 @@ async def check_scan_concurrency(
     return remaining
 
 
+async def check_scan_quota(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    from sqlalchemy import select, func
+    from app.models.job import ScanJob
+    
+    # Bypass quota for admins
+    if current_user.role == UserRole.ADMIN:
+        return
+        
+    query = select(func.count()).select_from(ScanJob).where(ScanJob.owner_id == current_user.id)
+    result = await db.execute(query)
+    total_scans = result.scalar() or 0
+    
+    # Hardcoded limit of 5 for safety on public deployments
+    if total_scans >= 5:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You have reached your maximum lifetime limit of 5 scans. Please upgrade your account or contact support."
+        )
+
+
 async def get_current_user_ws(
     ws: WebSocket,
     token: Optional[str] = Query(None, alias="token"),

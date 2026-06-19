@@ -30,7 +30,7 @@ from app.schemas.scan import (
     ScanStageProgress,
 )
 from app.schemas.common import PaginationParams
-from app.api.deps import get_current_user, get_current_active_user, get_current_user_ws, rate_limit_scan, rate_limit, check_scan_concurrency
+from app.api.deps import get_current_user, get_current_active_user, get_current_user_ws, rate_limit_scan, rate_limit, check_scan_concurrency, check_scan_quota
 from app.tasks.scan_tasks import execute_full_pipeline, execute_vuln_scan_full
 from app.services.scan import ScanService
 from app.core.logger import get_logger
@@ -48,6 +48,7 @@ async def start_scan(
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db),
     _scan_concurrency: None = Depends(check_scan_concurrency),
+    _scan_quota: None = Depends(check_scan_quota),
     _rate_limit: None = Depends(rate_limit_scan),
 ):
     scan_service = ScanService(db)

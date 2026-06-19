@@ -42,25 +42,37 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         return response
 
 
-def validate_domain(domain: str) -> bool:
-    if not domain:
-        return False
-    domain = domain.lower().strip()
-    if settings.ALLOWED_DOMAINS == "*":
-        return bool(DOMAIN_REGEX.match(domain))
-    allowed = [d.strip().lower() for d in settings.ALLOWED_DOMAINS.split(",")]
-    return any(
-        domain == a or domain.endswith("." + a)
-        for a in allowed
-    )
-
-
 def sanitize_domain(domain: str) -> str:
     domain = domain.lower().strip()
     domain = re.sub(r'^https?://', '', domain)
     domain = domain.split('/')[0]
     domain = domain.split(':')[0]
     return domain.strip()
+
+
+def validate_domain(domain: str) -> bool:
+    if not domain:
+        return False
+    domain = sanitize_domain(domain)
+    
+    # 1. Reject bare IP addresses (IPv4 and IPv6) to prevent trivial SSRF
+    ipv4_pattern = re.compile(r'^(\d{1,3}\.){3}\d{1,3}$')
+    ipv6_pattern = re.compile(r'^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$')
+    if ipv4_pattern.match(domain) or ipv6_pattern.match(domain):
+        return False
+        
+    # 2. Reject internal/local pseudo-TLDs and localhost
+    if domain == "localhost" or domain.endswith(".local") or domain.endswith(".internal"):
+        return False
+        
+    if settings.ALLOWED_DOMAINS == "*":
+        return bool(DOMAIN_REGEX.match(domain))
+        
+    allowed = [d.strip().lower() for d in settings.ALLOWED_DOMAINS.split(",")]
+    return any(
+        domain == a or domain.endswith("." + a)
+        for a in allowed
+    )
 
 
 def sanitize_tool_input(input_str: str) -> str:
